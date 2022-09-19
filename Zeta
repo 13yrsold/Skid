@@ -1,0 +1,1542 @@
+--// skidding Zeta because im not home and im bored
+
+if pcall(readfile,"ZetaSettings") then
+    writefile("ZetaSettings.json",readfile("ZetaSettings"))
+	if delfile then
+		 delfile("ZetaSettings")
+	end
+end 
+
+local Tick = tick()
+
+getgenv().Players = game:GetService'Players'
+getgenv().TeleportService = game:GetService'TeleportService'
+getgenv().ReplicatedStorage = game:GetService'ReplicatedStorage' 
+getgenv().StarterGui = game:GetService'StarterGui'
+getgenv().TweenService = game:GetService'TweenService'
+getgenv().UserInput = game:GetService'UserInputService'
+getgenv().RunService = game:GetService'RunService'
+getgenv().Lighting = game:GetService'Lighting'
+getgenv().CoreGui = game:GetService'CoreGui'
+getgenv().HttpService = game:GetService'HttpService'
+getgenv().MarketplaceService = game:GetService'MarketplaceService'
+getgenv().LP = Players.LocalPlayer or Players.PlayerAdded:Wait()
+getgenv().Mouse = LP:GetMouse()
+getgenv().GetChar = function() return LP.Character or LP.CharacterAdded:Wait() end
+GetChar():WaitForChild('Humanoid',10) -- allows auto-execution
+local PlayerTable,Commands,KeyTable,UrlEncoder,AdminUsers,DontStompWhitelisted = {},{},{['w'] = false;['a'] = false;['s'] = false;['d'] = false;['Shift'] = false;['Control'] = false;},{['0'] = "%30";['1'] = "%31";['2'] = "%32";['3'] = "%33"; ['4'] = "%34";['5'] = "%35";['6'] = "%36";['7'] = "%37";['8'] = "%38";['9'] = "%39";[' '] = "%20";},{},{}
+local NormalWS,NormalJP,NormalHH = GetChar().Humanoid.WalkSpeed,GetChar().Humanoid.JumpPower,GetChar().Humanoid.HipHeight
+local AimLock,GodMode,AutoDie,AliasesEnabled,Noclipping,AutoFarm,ItemEsp,WalkShoot,flying,AutoStomp,Freecam,CamLocking,FeLoop,TpBypass,HealBot = false,false,false,true,false,false,false,false,false,false,false,false,false,false,false
+local BlinkSpeed,SpawnWS,SpawnJP,SpawnHH,ClockTime,PlayOnDeath,AimlockTarget,CamlockPlayer,LoopPlayer
+local AirWalk = Instance.new'Part'
+local Cframe = Instance.new("Frame",CoreGui.RobloxGui)
+local CText,CmdFrame,MainFrame,DmgIndicator = Instance.new("TextBox",Cframe),Instance.new("Frame",Cframe),Instance.new('Frame',CoreGui.RobloxGui),Instance.new('TextLabel',LP.PlayerGui.Chat.Frame)
+local ScrollingFrame,SearchBar,Credits = Instance.new('ScrollingFrame',MainFrame),Instance.new('TextBox',MainFrame),Instance.new('TextLabel',MainFrame)
+local BulletColour,ItemEspColour,EspColour = ColorSequence.new(Color3.fromRGB(144,0,0)),Color3.fromRGB(200,200,200),Color3.fromRGB(200,200,200)
+local UseDraw,DrawingT = pcall(assert,Drawing,'test')
+local ShiftSpeed,ControlSpeed,WalkSpeed,HealBotHealth,BlinkSpeed,AimbotVelocity = 25,8,16,25,1,5
+local OldFov = workspace.CurrentCamera.FieldOfView
+local Config = "ZetaSetting"
+local TargetPart,AimlockMode = "Prediction","LeftClick"
+Players:Chat("Zeta User")
+local RobloxInForeground = true 
+local DrawTable = {
+	['LineColour'] = Color3.fromRGB(0,144,0);
+	['Thickness'] = 1;
+	['Transparency'] = 1;
+	['Visible'] = true;
+}
+
+if UseDraw then 
+	DrawingT = Drawing.new'Text'
+	DrawingT.Visible = true
+	DrawingT.Center = true 
+	DrawingT.Size = 15
+	DrawingT.Position = Vector2.new((workspace.CurrentCamera.ViewportSize.X / 2) - 450, (workspace.CurrentCamera.ViewportSize.Y - 125))
+	DrawingT.Color = Color3.fromRGB(255,255,255)
+	DrawingT.Text = "Current WalkSpeed: "..GetChar().Humanoid.WalkSpeed.."\nSprinting Speed: "..ShiftSpeed.."\nCrouching Speed: "..ControlSpeed.."\nJumpPower: "..GetChar().Humanoid.JumpPower.."\nFlying: "..tostring(flying).."\nNoclipping: "..tostring(Noclipping).."\nAimlock Target: "..tostring(AimlockTarget)
+end 
+
+if workspace:FindFirstChild'Armoured Truck' then
+	PartTable = {
+		['Burger'] = workspace:WaitForChild'Burger | $15';
+		['Drink'] = workspace:WaitForChild'Drink | $15';
+		['Ammo'] = workspace:WaitForChild'Buy Ammo | $25';
+		['Pipe'] = workspace:WaitForChild'Pipe | $100';
+		['Machete'] = workspace:WaitForChild'Machete | $70';
+		['SawedOff'] = workspace:WaitForChild'Sawed Off | $150';
+		['Spray'] = workspace:WaitForChild'Spray | $20';
+		['Uzi'] = workspace:WaitForChild'Uzi | $150';
+		['Glock'] = workspace:WaitForChild'Glock | $200';
+	}
+    workspace["Armoured Truck"]:Destroy()
+elseif workspace:FindFirstChild'TPer' then 
+    workspace['TPer']:Destroy()
+end
+
+LP.PlayerGui.Chat.Frame.ChatChannelParentFrame.Visible = true
+LP.PlayerGui.Chat.Frame.ChatBarParentFrame.Position = LP.PlayerGui.Chat.Frame.ChatChannelParentFrame.Position + UDim2.new(UDim.new(),LP.PlayerGui.Chat.Frame.ChatChannelParentFrame.Size.Y)
+
+local SettingsTable = {
+    Keys = {};
+    ClickTpKey = "";
+    ShiftSpeed = 25;
+    ControlSpeed = 8;
+    TargetPart = "Prediction";
+    AimlockMode = "LeftClick";
+    BlinkMode = "Shift";
+    AimbotVelocity = 7.5;
+ }
+ 
+ -- Hotkey start
+ 
+ local function savesettings()
+     writefile(Config..".json",HttpService:JSONEncode(SettingsTable))
+     local SettingsToSave = HttpService:JSONDecode(readfile(Config..".json"))
+     Keys = SettingsToSave.Keys;
+     ClickTpKey = SettingsToSave.ClickTpKey;
+     ShiftSpeed = SettingsToSave.ShiftSpeed;
+     ControlSpeed = SettingsToSave.ControlSpeed;
+     TargetPart = SettingsToSave.TargetPart;
+     AimlockMode = SettingsToSave.AimlockMode;
+     BlinkMode = SettingsToSave.BlinkMode;
+     AimbotVelocity = SettingsToSave.AimbotVelocity;
+ end 
+ 
+ getgenv().updateSettings = function()
+     local New = { 
+         Keys = Keys;
+         ClickTpKey = ClickTpKey;
+         ShiftSpeed = ShiftSpeed;
+         ControlSpeed = ControlSpeed;
+         TargetPart = TargetPart;
+         AimlockMode = AimlockMode;
+         BlinkMode = BlinkMode;
+         AimbotVelocity = AimbotVelocity;
+     }
+     writefile(Config..".json",HttpService:JSONEncode(New))
+ end
+ 
+ local function runsettings()
+     local SettingsToRun = HttpService:JSONDecode(readfile(Config..".json"))
+     Keys = SettingsToRun.Keys
+     ClickTpKey = SettingsToRun.ClickTpKey
+     BlinkMode = SettingsToRun.BlinkMode
+     if SettingsToRun.AimlockMode then 
+         AimlockMode = SettingsToRun.AimlockMode
+     end
+     if SettingsToRun.TargetPart then 
+         TargetPart = SettingsToRun.TargetPart
+     end
+     if SettingsToRun.ShiftSpeed and SettingsToRun.ControlSpeed then 
+         ShiftSpeed = SettingsToRun.ShiftSpeed;
+         ControlSpeed = SettingsToRun.ControlSpeed;
+     end 
+     if SettingsToRun.AimbotVelocity then 
+         AimbotVelocity = SettingsToRun.AimbotVelocity
+     end
+ end
+ 
+ if readfile and writefile then 
+     local Work,Error = pcall(readfile,Config..".json")
+     if not Work then 
+         local Work,Error = pcall(savesettings)
+         if not Work then 
+             print'Error with saving settings' 
+         end 
+     else
+         local Work,Error = pcall(runsettings)
+         if not Work then 
+             print'Error with running settings'
+         end 
+     end
+ end 
+
+ local gamememe = getrawmetatable(game)
+local Closure,Caller = newcclosure,checkcaller or is_protosmasher_caller or Cer.isCerus
+local writeable = setreadonly or make_writeable
+local callingscript = getcallingscript or get_calling_script
+local name,index,nindex = gamememe.__namecall,gamememe.__index,gamememe.__newindex
+writeable(gamememe,false)
+
+gamememe.__index = Closure(function(self,Index)
+	if TpBypass and callingscript and callingscript() ~= script and Index == "HumanoidRootPart" then -- was requested to add this
+		return index(self,"Torso")
+	end 
+	return index(self,Index)
+end)
+
+gamememe.__newindex = Closure(function(self,Property,b)
+if Caller() then return nindex(self,Property,b) end
+	if self:IsA'Humanoid' then 
+	game:GetService'StarterGui':SetCore('ResetButtonCallback',true)
+		if Property == "WalkSpeed" then
+			if WalkShoot then 
+				return
+			end
+		end
+		if Property == "Health" or Property == "JumpPower" or Property == "HipHeight"  then 
+			return 
+		end
+	end
+	if Property == "CFrame" and self:IsDescendantOf(LP.Character) then
+		return 
+	end
+	return nindex(self,Property,b)
+end)
+
+gamememe.__namecall = Closure(function(self,...)
+local Arguments = {...}
+	if Caller() then 
+		if getnamecallmethod() == "FindFirstChild" then
+			if Arguments[1] == "RealHumanoidRootPart" then 
+				Arguments[1] = "HumanoidRootPart" 
+				return name(self,unpack(Arguments))
+			end
+		end
+		return name(self,...) 
+	end 
+		if getnamecallmethod() == "Destroy" and tostring(self) == "BodyGyro" or getnamecallmethod() == "Destroy" and tostring(self) == "BodyVelocity" then
+			return wait(9e9)
+		end
+		if getnamecallmethod() == "BreakJoints" and self.Name == LP.Character.Name then
+			return wait(9e9)
+		end
+		if getnamecallmethod() == "Kick" or getnamecallmethod() == "Destroy" and tostring(self) == tostring(LP) then 
+			return
+		end
+		if getnamecallmethod() == "WaitForChild" or getnamecallmethod() == "FindFirstChild" then 
+			if callingscript and callingscript() ~= script and TpBypass and Arguments[1] == "HumanoidRootPart" then
+				Arguments[1] = "Torso"
+				return name(self,unpack(Arguments))
+			end
+		end
+		if getnamecallmethod() == "FireServer" then
+				if self.Name == "lIII" or tostring(self.Parent) == "ReplicatedStorage" then 
+					return wait(9e9)
+				end
+				if Arguments[1] == "hey" then 
+					return wait(9e9)
+				end
+				if Arguments[1] == "play" then
+					local TempTable = {}
+					tostring(Arguments[2]):gsub('.',function(Char)
+							if UrlEncoder[Char] then 
+								table.insert(TempTable,UrlEncoder[Char])
+							else 
+							table.insert(TempTable,Char)
+						end
+					end)
+					Arguments[2] = table.concat(TempTable,"")
+					PlayOnDeath = Arguments[2]
+					return name(self,unpack(Arguments))
+				end
+		if Arguments[1] == "stop" then 
+			PlayOnDeath = nil 
+		end
+	end
+	if LP.Character.FindFirstChildOfClass(LP.Character,"Tool") and typeof(Arguments[1]) == "CFrame" then
+		if AimlockTarget and AimLock then
+			if TargetPart == "Prediction" then
+				if AimlockTarget.FindFirstChild(AimlockTarget,"HumanoidRootPart") then
+					return name(self,AimlockTarget.Head.CFrame + AimlockTarget.HumanoidRootPart.Velocity / AimbotVelocity)
+				else 
+					return name(self,AimlockTarget.Head.CFrame + AimlockTarget.Torso.Velocity / AimbotVelocity)
+				end 
+			else
+				if AimlockTarget.FindFirstChild(AimlockTarget,TargetPart) then 
+					return name(self,AimlockTarget[TargetPart].CFrame) 
+				else
+					Notify(tostring(AimlockTarget).." doesn't have that part in their character.","I recommend switching to something else.",5,nil)
+				end
+			end
+		end
+	end 
+    return name(self,...)
+end)
+
+writeable(gamememe,true)
+
+------------sh
+
+getgenv().Notify = function(title,message,length,icon)
+	StarterGui:SetCore("SendNotification",{['Title'] = title;['Text'] = message;['Duration'] = length;['Icon'] = icon;})
+end
+
+getgenv().Teleport = function(Part)
+    if not typeof(Part) == "CFrame" then return end
+    local PartFound = GetChar():FindFirstChild'HumanoidRootPart' or GetChar():FindFirstChild'Torso'
+        if not GetChar():FindFirstChild'HumanoidRootPart' then 
+            PartFound.CFrame = Part
+        else
+            local Play = TweenService:Create(PartFound, TweenInfo.new(3.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),{CFrame = Part})
+            Play:play()
+        end
+    end
+    
+    local function hasItem(Player,Item)
+        if type(Item) == "boolean" then
+            local Tool = Player.Character:FindFirstChildOfClass'Tool'
+            if Tool then 
+                return Tool.Name
+            else
+                return 'none'
+            end
+        end
+        if Player.Backpack:FindFirstChild(Item) or Player.Character:FindFirstChild(Item) then
+            return 'yes' 
+        else
+            return 'no'
+        end
+    end 
+    
+    local function checkHp(Plr)
+        return Plr:FindFirstChildOfClass'Humanoid' and Plr.Humanoid.Health or "No Humanoid"
+    end
+    
+    local function LegacyEsp(Player)
+    if not Player.Character or not Player.Character:FindFirstChild'Head' then return end 
+        local Esp1 = Instance.new("BillboardGui",Player.Character)
+        local Text = Instance.new("TextLabel",Esp1)
+        Esp1.Adornee = Player.Character.Head
+        Esp1.Name = "[ESP]"..Player.Name
+        Esp1.Size = UDim2.new(0,100,0,100)
+        Esp1.StudsOffset = Vector3.new(0,1,0)
+        Esp1.AlwaysOnTop = true
+        Text.BackgroundTransparency = 1
+        Text.Position = UDim2.new(0,0,0,0)
+        Text.Size = UDim2.new(1,0,0,40)
+        Text.TextStrokeTransparency = 0.5
+        Text.TextSize = 15
+        local PCChild = Player.Character:GetChildren()
+        RunService.Stepped:Connect(function()
+            if Player and Player.Character and Player.Character:FindFirstChild'Head' and GetChar():FindFirstChild'Head' then 
+                Text.Text = Player.Name.." Position: "..math.floor((GetChar().Head.Position - Player.Character.Head.Position).magnitude)
+                Text.TextStrokeColor3 = EspColour
+                Text.TextColor3 = EspColour
+            end
+        end)
+        return Esp1
+    end 
+    
+    local EspTable = {} 
+    local function espPlayer(Player,Method,IsUser)
+    if not Player.Character or not Player.Character:FindFirstChild'Head' then return end
+    if not IsUser then IsUser = "false" else IsUser = "true" end 
+    if table.find(AdminUsers,Player.UserId) then IsUser = "true" end 
+        if not UseDraw or Method == "Legacy" then
+            local Esp1 = LegacyEsp(Player)
+            local CAdded;
+            CAdded = Player.CharacterAdded:Connect(function(C)
+                if table.find(EspTable,Player.UserId) then 
+                    C:WaitForChild('Head',10)
+                    Esp1 = LegacyEsp(Player)
+                else 
+                    CAdded:Disconnect()
+                end
+            end)
+        else 
+            local TopLeft,TopRight,BottomLeft,BottomRight = Drawing.new'Line',Drawing.new'Line',Drawing.new'Line',Drawing.new'Line'
+            local Text = Drawing.new'Text'
+            TopLeft.Color = Color3.fromRGB(0,144,0)
+            TopRight.Color = Color3.fromRGB(0,144,0)
+            BottomLeft.Color = Color3.fromRGB(0,144,0)
+            BottomRight.Color = Color3.fromRGB(0,144,0)
+            local Tracer = Drawing.new'Line'
+            PlayerTable[#PlayerTable + 1] = {Player,TopLeft,TopRight,BottomLeft,BottomRight,Text,Tracer,IsUser}
+        end 
+    end
+    
+    local function Unesp(P)
+        for i = 1,#PlayerTable do
+            if PlayerTable[i] and PlayerTable[i][1] == P then
+                PlayerTable[i][2]:Remove()
+                PlayerTable[i][3]:Remove()
+                PlayerTable[i][4]:Remove()
+                PlayerTable[i][5]:Remove()
+                PlayerTable[i][6]:Remove()
+                PlayerTable[i][7]:Remove()
+                PlayerTable[i][8] = nil 
+                table.remove(PlayerTable,i)
+            end 
+        end
+    end 
+    local function GrabThing(Thing,OldPos)
+        if not PartTable then 
+            Notify("Can't tp to "..Thing,"as you are not playing normal streets!",5,"rbxassetid://1281284684") return 
+        end
+        local PartFound = GetChar():FindFirstChild'HumanoidRootPart' or GetChar():FindFirstChild'Torso'
+        local Anim = Instance.new'Animation'
+        Anim.AnimationId = "rbxassetid://188632011"
+        local Track = GetChar().Humanoid:LoadAnimation(Anim)
+        PartFound.CFrame = PartFound.CFrame * CFrame.new(math.random(20,45),0,math.random(1,5))
+        wait()
+            repeat  
+                Track:play(.1,1,1)
+                PartFound.CFrame = PartTable[Thing]:FindFirstChildOfClass'Part'.CFrame + Vector3.new(0,0.5,0)
+                RunService.Heartbeat:wait()
+            until PartTable[Thing]:FindFirstChildOfClass'Part'.BrickColor == BrickColor.new'Bright red' or GetChar():FindFirstChild'KO' or GetChar().Humanoid.Health == 0
+            PartFound.CFrame = OldPos
+            return true
+        end 
+        
+        local function Button1Down()
+        local MTarget = Mouse.Target
+            if GetChar():FindFirstChild'Zetox Btools' then 
+                Mouse.Target:Destroy()
+            end
+            if MTarget and MTarget.Parent then 
+                local NTarget = MTarget.Parent 
+                if not Players:GetPlayerFromCharacter(NTarget) then NTarget = NTarget.Parent end 
+                if not Players:GetPlayerFromCharacter(NTarget) then return end 
+                if NTarget ~= LP.Character and NTarget ~= AimlockTarget and AimLock and AimlockMode == "LeftClick" then 
+                    AimlockTarget = NTarget
+                    local Connection;
+                    Connection = Players:GetPlayerFromCharacter(NTarget).CharacterAdded:Connect(function(C)
+                        if tostring(AimlockTarget) == tostring(C) then 
+                            AimlockTarget = C 
+                        else
+                            Connection:Disconnect()
+                        end 
+                    end)
+                    Notify("AimlockTarget has been set to",AimlockTarget.Name,5,nil)
+                end
+            end
+        end
+        
+        local function BehindAWall(Target)
+            local RYEBread = Ray.new(workspace.CurrentCamera.CoordinateFrame.p,Target.Head.Position - workspace.CurrentCamera.CoordinateFrame.Position)
+            local RYEBreadHit = workspace:FindPartOnRay(RYEBread)
+            if RYEBreadHit then 
+                if RYEBreadHit:IsDescendantOf(Target) then 
+                    return false
+                else
+                    return true 
+                end 
+            end 
+        end
+        
+        local function closestToMouse()
+        local ClosestPos,ClosestPlayer = math.huge,nil
+            for i,v in pairs(Players:GetPlayers()) do 
+                if v.Character and v.Character:FindFirstChild'Head' and v ~= LP then 
+                    local Dist = (v.Character.Head.Position - workspace.CurrentCamera.CoordinateFrame.Position).magnitude
+                    local RYETarget = Ray.new(workspace.CurrentCamera.CoordinateFrame.Position,(Mouse.Hit.p - workspace.CurrentCamera.CoordinateFrame.Position)).unit
+                    local RYEHit,RYEPos = workspace:FindPartOnRay(RYETarget,workspace)
+                    local NewPos = math.floor((RYEPos - v.Character.Head.Position).magnitude)
+                    if NewPos < 500 and NewPos < ClosestPos and not BehindAWall(v.Character) then
+                        ClosestPos = NewPos
+                        ClosestPlayer = v 
+                    end
+                end
+            end
+            return ClosestPlayer
+        end
+        
+        local function Button2Down()
+        if Mouse.Target then 
+            local Target = Mouse.Target.Parent 
+            if Target:FindFirstChild'Lock' and Target:FindFirstChild'Click' and Target:FindFirstChild'Locker' then 
+                if Target.Locker.Value then 
+                        Target.Lock.ClickDetector:FindFirstChildOfClass'RemoteEvent':FireServer()
+                        Target.Click.ClickDetector:FindFirstChildOfClass'RemoteEvent':FireServer()
+                    else
+                        Target.Click.ClickDetector:FindFirstChildOfClass'RemoteEvent':FireServer()
+                        Target.Lock.ClickDetector:FindFirstChildOfClass'RemoteEvent':FireServer()
+                    end
+                end
+            end
+            if AimLock and AimlockMode == "RightClick" and KeyTable['Shift'] then 
+                AimlockTarget = closestToMouse().Character
+                local Connection;
+                Connection = Players:GetPlayerFromCharacter(AimlockTarget).CharacterAdded:Connect(function(C)
+                    if tostring(AimlockTarget) == tostring(C) then 
+                        AimlockTarget = C 
+                    else
+                        Connection:Disconnect()
+                    end 
+                end)
+                Notify("AimlockTarget","has been set to"..AimlockTarget.Name,5,nil)
+            end 
+        end
+
+        local function b(Text)
+            DmgIndicator.Visible = true 
+            DmgIndicator.Text = Text
+            wait(5)
+            DmgIndicator.Text = "" 
+            DmgIndicator.Visible = false 
+        end 
+
+        local function Char(Plr)
+            local Tool = Plr:FindFirstChildOfClass'Tool'
+                if Tool:FindFirstChild'Fire' then 
+                    return 'shot you',Tool
+                else 
+                    return 'hit you',Tool
+                end
+            end 
+            
+            getgenv().AddCommand = function(CommandF,Name,Alias,Help)
+                Commands[#Commands + 1] = {['Function'] = CommandF,['Name'] = Name,['Alias'] = Alias,['Help'] = Help}
+            end
+            getgenv().FindCommand = function(Command)
+                for i = 1,#Commands do 
+                    if Commands[i].Name:lower() == Command or AliasesEnabled and table.find(Commands[i].Alias,Command) then
+                        return Help and Commands[i].Name.." "..Commands[i].Help or Commands[i].Function
+                    end
+                end
+            end
+            
+            getgenv().CheckCommand = function(Chat)
+                Chat = string.gsub(Chat, "\r", "")
+                local Arguments = string.split(Chat," ")
+                local NCommand = FindCommand(table.remove(Arguments,1):lower())
+                if NCommand then 
+                    local Work,Error = pcall(NCommand,Arguments)
+                    if not Work then 
+                        wait(0.5)
+                        ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("There was an error with this command, I have set it to your clipboard. Send it to Cy (with the command you used) and it should be fixed next update.","All")
+                        if setclipboard then 
+                            setclipboard(Error)
+                        else 
+                            print(Error)
+                        end
+                    end
+                end
+            end
+            
+            getgenv().PlrFinder = function(Plr)
+            local NewPlr,Player = Plr:lower(),Players:GetPlayers()
+            if #NewPlr == 2 and NewPlr == "me" then return LP end 
+            if NewPlr == "all" then return Player end 
+                for i = 1,#Player do 
+                    if Player[i].Name:lower():sub(1,#NewPlr) == NewPlr then 
+                        return Player[i]
+                    end
+                end
+            end
+
+            local JustDoubleJumped = false 
+local function HumanoidState(Old,New)
+	if New == Enum.HumanoidStateType.Landed and JustDoubleJumped then 
+		local Anim = Instance.new'Animation'
+		Anim.AnimationId = "rbxassetid://129423030" 
+		local AnimTrack = GetChar().Humanoid:LoadAnimation(Anim)
+		wait(0.3)
+		AnimTrack:play()
+		JustDoubleJumped = false
+	elseif New == Enum.HumanoidStateType.FallingDown or New == Enum.HumanoidStateType.PlatformStanding and NoGh or flying then
+      	GetChar().Humanoid.PlatformStand = false
+		GetChar().Humanoid:ChangeState(8)
+  	end
+end
+
+local function DoubleJump()
+	if GetChar() and GetChar().Humanoid and DoubleJumpEnabled then
+	    GetChar().Humanoid:ChangeState(3)
+	    local Anim = Instance.new'Animation'
+	    Anim.AnimationId = "rbxassetid://229782914"
+	    local AnimTrack = GetChar().Humanoid:LoadAnimation(Anim)
+	    AnimTrack:play(.1,1,1.5)
+		JustDoubleJumped = true
+	end
+end
+
+getgenv().find = function(Item)
+  for i,v in pairs(workspace:GetChildren()) do 
+      if v.Name == "RandomSpawner" and v:FindFirstChild'Model' then
+      local Handle = v.Model.Handle
+        if Item == "Cash" and Handle:FindFirstChildOfClass'MeshPart' and string.find(Handle:FindFirstChildOfClass'MeshPart'.MeshId,"511726060") then
+          return v
+        elseif Item == "Shotty" and Handle:FindFirstChild'Fire' and string.find(Handle.Fire.SoundId,"142383762") then 
+          return v
+        elseif Item == "Sawed Off" and Handle:FindFirstChild'Fire' and string.find(Handle.Fire.SoundId,"219397110") then 
+          return v 
+        elseif Item == "Uzi" and Handle:FindFirstChild'Fire' and string.find(Handle.Fire.SoundId,"328964620") then 
+          return v 
+        elseif Item == "All" then 
+          return v
+      end
+    end
+  end
+end
+
+local function uselessfunction(Thing)
+local Model = Thing:WaitForChild('Model',10)
+if Model then 
+	local Handle = Thing.Model.Handle
+		if Handle:FindFirstChildOfClass'MeshPart' and string.find(Handle:FindFirstChildOfClass'MeshPart'.MeshId,"511726060") then
+			return "Cash"
+		elseif Handle:FindFirstChild'Fire' and string.find(Handle.Fire.SoundId,"142383762") then 
+			return "Shotty"
+		elseif Handle:FindFirstChild'Fire' and string.find(Handle.Fire.SoundId,"219397110") then 
+			return "Sawed Off"
+		elseif Handle:FindFirstChild'Fire' and string.find(Handle.Fire.SoundId,"328964620") then 
+			return "Uzi"
+		elseif Handle:FindFirstChild'Blade' and string.find(Handle.Blade.TextureID,"12177251") then 
+			return "Katana"
+		end
+	end
+end
+
+local function addBillBoardGui(Item)
+	local Itemx = uselessfunction(Item)
+	if not Itemx then return end 
+	local Esp1 = Instance.new("BillboardGui",Item)
+	local Text = Instance.new("TextLabel",Esp1)
+	Esp1.Adornee = Item
+	Esp1.Size = UDim2.new(0,100,0,100)
+	Esp1.StudsOffset = Vector3.new(0,1,0)
+	Esp1.AlwaysOnTop = true
+	Text.BackgroundTransparency = 1
+	Text.Position = UDim2.new(0,0,0,0)
+	Text.Size = UDim2.new(1,0,0,40)
+	Text.TextColor3 = ItemEspColour
+	Text.TextStrokeTransparency = 0.5
+	Text.TextSize = 15
+	Text.TextStrokeColor3 = ItemEspColour
+	Text.Text = Itemx
+end 	
+
+-----commands
+
+
+AddCommand(function()
+	NoGh = not NoGh
+	Notify("Nogh","Has been set to "..tostring(NoGh),5,nil) 
+end,"nogroundhit",{"nogh","antigh","antigroundhit"},"Makes it so you can't be ground hit")
+
+local SpamDelay,SpamMessage,Spamming = 1,"Zeta' Admin Or No Admin",false 
+AddCommand(function(Arguments)
+	if Arguments[1] then 
+		SpamMessage = table.concat(Arguments," ")
+	end 
+	Spamming = not Spamming 
+end,"spam",{},"Spams a message you set")
+
+AddCommand(function(Arguments)
+	if Arguments[1] then 
+		Normalwalk = true
+		WalkShoot = true 
+		GetChar().Humanoid.WalkSpeed = Arguments[1]
+		WalkSpeed = Arguments[1]
+	end
+end,"speed",{"ws"},"Changes your Humanoids WalkSpeed")
+
+AddCommand(function()
+	WalkShoot = not WalkShoot
+end,"walkshoot",{"noslow"},"Allows you to turn on / off walk shooting")
+
+AddCommand(function(Arguments)
+	if not Arguments[1] then 
+		TeleportService:TeleportToPlaceInstance(game.PlaceId,game.JobId)
+	end
+end,"rejoin",{"rj"},"Rejoins your CURRENT game server")
+
+AddCommand(function(Arguments)
+	if not Arguments[1] then 
+		GetChar():BreakJoints()
+	end
+end,"reset",{"re"},"SUICIDE IS PAINLESS IT BRINGS ON MANY CHANGES")
+
+AirWalk.Anchored = true 
+AirWalk.Size = Vector3.new(5,1,5)
+AirWalk.Transparency = 1 
+AirWalk.Material = "Neon"
+AddCommand(function(Arguments)
+	AirWalkOn = not AirWalkOn 
+	AirWalk.Parent = AirWalkOn and workspace or not AirWalkOn and nil 
+end,"airwalk",{},"Allows you to float in the air")
+
+local NeverSitting = false 
+AddCommand(function()
+NeverSitting = not NeverSitting
+	if NeverSitting then
+		local toParent = workspace:GetDescendants()
+		for i = 1,#toParent do 
+			if string.find(toParent[i].ClassName:lower(),'seat') then 
+				toParent[i].Parent = CoreGui
+			end
+		end
+	else
+		local toParent = CoreGui:GetChildren()
+		for i = 1,#toParent do 
+			if string.find(toParent[i].ClassName:lower(),'seat') then 
+				toParent[i].Parent = workspace
+			end
+		end
+	
+    end
+    Notify("NoSit","Has been set to "..tostring(NeverSitting),5,nil) 
+end,"nosit",{"nsit"},"Never sit")
+
+AddCommand(function()
+	AutoDie = not AutoDie
+end,"autodie",{"autoreset"},"When Ko'ed auto kills you")
+
+AddCommand(function()
+	Noclipping = not Noclipping
+	Notify("Command: Noclip: ","Noclip has been set to "..tostring(Noclipping),5,"rbxassetid://1281284684")
+end,"noclip",{},"Allows you to walk through walls")
+
+AddCommand(function(Arguments)
+	if Arguments[1] then 
+		local Player = PlrFinder(Arguments[1])
+		if Player and Player.Character and Player.Character:FindFirstChild'Head' and Player ~= LP then 
+			Teleport(Player.Character.Head.CFrame)
+		end
+	end
+end,"goto",{"to"},"Teleports you to the selected player")
+
+AddCommand(function(Arguments)
+	Blinking = not Blinking
+	if Blinking then 
+		if not Arguments[1] or not tonumber(Arguments[1]) then 
+			BlinkSpeed = 2
+		else 
+			BlinkSpeed = Arguments[1]
+		end
+	end
+	Notify("Blinking","Has been set to "..tostring(Blinking),5,nil) 
+end,"blink",{},"Another form of speed, Uses CFrame")
+
+AddCommand(function(Arguments)
+	if Arguments[1] then 
+		if Arguments[1]:lower() == "shift" then
+			BlinkMode = "Shift"
+		elseif Arguments[1]:lower() == "none" then 
+			BlinkMode = "None" -- giving people the illusion of free choice is my motto! --yes!
+		end
+		updateSettings()
+	end 
+end,"blinkmode",{},"Changes Blinkmode")
+
+local FlySpeed = 10
+local FirstFly = true  
+local function fly(SPEED) -- CREDITS TO INFINITE YIELD FOR THIS FLY METHOD (I'M PLANNING TO MAKE MY OWN SOON)
+FlySpeed = SPEED or 10
+	local T = GetChar():FindFirstChild'HumanoidRootPart' or GetChar():FindFirstChild'Torso'
+	if not AirWalkOn then
+		CheckCommand("airwalk") -- decided to use airwalk since it works the best
+	end 
+	local CONTROL = {F = 0, B = 0, L = 0, R = 0}
+	local lCONTROL = {F = 0, B = 0, L = 0, R = 0}
+	local function fly()
+		flying = true
+		local BG = Instance.new('BodyGyro', T)
+		local BV = Instance.new('BodyVelocity', T)
+		BG.P = 9e4
+		BG.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+		BG.cframe = T.CFrame
+		BV.velocity = Vector3.new(0, 0.1, 0)
+		BV.maxForce = Vector3.new(9e9, 9e9, 9e9)
+		spawn(function()
+		repeat wait()
+		if CONTROL.L + CONTROL.R ~= 0 or CONTROL.F + CONTROL.B ~= 0 then
+		SPEED = 50
+		elseif not (CONTROL.L + CONTROL.R ~= 0 or CONTROL.F + CONTROL.B ~= 0) and SPEED ~= 0 then
+		SPEED = 0
+		end
+		if (CONTROL.L + CONTROL.R) ~= 0 or (CONTROL.F + CONTROL.B) ~= 0 then
+		BV.velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (CONTROL.F + CONTROL.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(CONTROL.L + CONTROL.R, (CONTROL.F + CONTROL.B) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * SPEED
+		lCONTROL = {F = CONTROL.F, B = CONTROL.B, L = CONTROL.L, R = CONTROL.R}
+		elseif (CONTROL.L + CONTROL.R) == 0 and (CONTROL.F + CONTROL.B) == 0 and SPEED ~= 0 then
+		BV.velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (lCONTROL.F + lCONTROL.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(lCONTROL.L + lCONTROL.R, (lCONTROL.F + lCONTROL.B) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * SPEED
+		else
+		BV.velocity = Vector3.new(0, 0.1, 0)
+		end
+		BG.cframe = workspace.CurrentCamera.CoordinateFrame
+				until not flying
+				CONTROL = {F = 0, B = 0, L = 0, R = 0}
+				lCONTROL = {F = 0, B = 0, L = 0, R = 0}
+				SPEED = 0
+				BG:destroy()
+				BV:destroy()
+				LP.Character:FindFirstChildOfClass'Humanoid'.PlatformStand = false
+				if AirWalkOn then
+					CheckCommand("airwalk")
+				end 
+			end)
+		end
+	Mouse.KeyDown:connect(function(KEY)
+		if KEY:lower() == 'w' then
+			CONTROL.F = FlySpeed
+		elseif KEY:lower() == 's' then
+			CONTROL.B = -FlySpeed
+		elseif KEY:lower() == 'a' then
+			CONTROL.L = -FlySpeed 
+		elseif KEY:lower() == 'd' then 
+			CONTROL.R = FlySpeed
+		end
+	end)
+	Mouse.KeyUp:connect(function(KEY)
+		if KEY:lower() == 'w' then
+			CONTROL.F = 0
+		elseif KEY:lower() == 's' then
+			CONTROL.B = 0
+		elseif KEY:lower() == 'a' then
+			CONTROL.L = 0
+		elseif KEY:lower() == 'd' then
+			CONTROL.R = 0
+		end
+	end)
+	fly()
+	if FirstFly then
+		flying = false 
+		wait(0.5)
+		fly()
+		FirstFly = false
+	end
+end
+
+AddCommand(function(Arguments)
+	if not flying then
+		fly(Arguments[1] and tonumber(Arguments[1]) or 10)
+	else 
+		flying = false 
+	end
+end,"fly",{"f"},"Allows you to be like a bird")
+
+AddCommand(function(Arguments)
+	if Arguments[1] then
+	local v = PlrFinder(Arguments[1])
+		if v then 
+			if not Arguments[2] then
+				Notify(v.Name,"Is on "..v.OsPlatform.." and is "..v.AccountAge.." days old",5,nil)
+	      	elseif Arguments[2] and Arguments[2]:lower() == "os" or Arguments[2]:lower() == "operatingsystem" then 
+				Notify(v.Name,"is on "..v.OsPlatform,5,nil)
+	      	elseif Arguments[2] and Arguments[2]:lower() == "age" or Arguments[2]:lower() == "accountage" or Arguments[2]:lower() == "accage" then 
+				Notify(v.Name,"has the account age of "..v.AccountAge,5,nil)
+			end
+		end
+	else
+		Notify(LP.Name,"you are on "..LP.OsPlatform.."(duh) and your Account Age is "..LP.AccountAge,5,nil)
+	end
+end,"playerinfo",{"info"},"PlayerInfo/Info [Player] [Os/OperatingSystem/AccAge/Age/Accountage/none]")
+
+AddCommand(function(Arguments)
+	if Arguments[1] and #Arguments[1] == 1 and Arguments[2] and Keys then
+		for Index,Key in pairs(Keys) do
+		if Key:match("[%a%d]+$") == Arguments[1]:lower() then
+				table.remove(Keys,Index)
+			end
+		end
+		local Hotkey = table.remove(Arguments, 1)
+		Keys[#Keys + 1] = table.concat(Arguments, " ").."||"..Hotkey
+		if writefile and readfile then 
+			updateSettings()
+		end
+	end
+end,"hotkey",{"key"},"Hotkeys a command to a key")
+
+AddCommand(function()
+	DoubleJumpEnabled = not DoubleJumpEnabled
+	Notify("Command: DoubleJump","has been set to "..tostring(DoubleJumpEnabled),5,"rbxassetid://1281284684")
+end,"infjump",{"infinitejump"},"Allows you to jump infitely")
+
+AddCommand(function(Arguments)
+	if Arguments[1] then
+		for Index,Key in pairs(Keys) do
+		if Key:match("[%a%d]+$") == Arguments[1]:lower() then
+				table.remove(Keys,Index)
+			end
+		end
+	end
+end,"removekey",{"rkey"},"Removes a hotkey to a command")
+
+AddCommand(function()
+	Keys = {}
+	ClickTpKey = ""
+	updateSettings()
+end,"removeallhotkeys",{"removeallkeys"},"Removes all hotkeys")
+
+local ViewPlayerConnection,ViewPlayerConnection2;
+AddCommand(function(Arguments)
+	if Arguments[1] then 
+	local Plr = PlrFinder(Arguments[1]) 
+		if Plr and Plr.Character then
+			if ViewPlayerConnection then ViewPlayerConnection:Disconnect() ViewPlayerConnection = nil ViewPlayerConnection2:Disconnect() ViewPlayerConnection2 = nil end 
+			workspace.CurrentCamera.CameraSubject = Plr.Character
+			if Arguments[2] and Arguments[2] == "loop" then
+				ViewPlayerConnection = Plr.CharacterAdded:Connect(function(C)
+					workspace.CurrentCamera.CameraSubject = C
+				end)
+				LP.CharacterAdded:Connect(function(C)
+					if Plr.Character then
+						workspace.CurrentCamera.CameraSubject = Plr.Character -- I don't know if this does anything I coded it at 7am but I remember someone saying view plr loop doesn't work when you respawn so
+					end
+				end)
+			end
+		end
+	end
+end,"view",{},"Allows you to look through a players vision")
+
+AddCommand(function()
+	if ViewPlayerConnection and ViewPlayerConnection2 then ViewPlayerConnection:Disconnect() ViewPlayerConnection2:Disconnect() ViewPlayerConnection = nil ViewPlayerConnection2 = nil end 
+	workspace.CurrentCamera.CameraSubject = GetChar()
+end,"unview",{},"Brings you back to your normal vision")
+
+AddCommand(function()
+	ItemEsp = not ItemEsp
+	if ItemEsp then 
+		local ChildrenInMyAttic = workspace:GetChildren()
+		for i = 1,#ChildrenInMyAttic do 
+			if ChildrenInMyAttic[i].Name == "RandomSpawner" then 
+				addBillBoardGui(ChildrenInMyAttic[i])
+			end
+		end
+	else 
+		local WChild = workspace:GetChildren()
+		for i = 1,#WChild do
+		local BBGui = WChild[i]:FindFirstChildOfClass'BillboardGui'
+			if WChild[i].Name == "RandomSpawner" and BBGui then 
+				BBGui:Destroy()
+			end
+		end
+	end 
+end,"itemesp",{},"Allows you to see where all the spawners are on the map through walls")
+
+AddCommand(function(Arguments)
+	if Arguments[1] then
+		if Arguments[1]:lower() == "all" then Notify("STOP IT","NO. JUST NO.",10,nil) return end 
+		local Player = PlrFinder(Arguments[1]) 
+		if Player ~= LP and Player and tostring(AimlockTarget) ~= tostring(Player) then
+			CheckCommand("esp "..Player.Name)
+			AimLock = true 
+			AimlockTarget = Player.Character
+			local Connection;
+			Connection = Player.CharacterAdded:Connect(function(C)
+				if tostring(C) == tostring(AimlockTarget) then 
+					AimlockTarget = C
+				else 
+					Connection:Disconnect()
+				end 
+			end)
+			Notify("AimlockTarget has been set to",AimlockTarget.Name,5,nil)
+		end
+	else
+		AimLock = not AimLock
+		Notify("Aimlock","has been set to "..tostring(AimLock),5,"rbxassetid://1281284684")
+	end
+end,"aimlock",{"aim"},"Shoots your gun that is titled 75 degrees at the selected person (Aimlock [Player/nil/loop] - if nil click players to set the aimlock target to them (loop makes it so when they respawn it still locks on)")
+
+local WhiteListedParts = {
+	['head'] = "Head";
+	['torso'] = "Torso";
+	['humanoidrootpart'] = "HumanoidRootPart";
+	['prediction'] = "Prediction";
+}
+
+AddCommand(function(Arguments)
+	if Arguments[1] then
+		if WhiteListedParts[Arguments[1]:lower()] then
+			TargetPart = WhiteListedParts[Arguments[1]:lower()]
+			updateSettings()
+			Notify("AimTarget","has been set to "..TargetPart,5,"rbxassetid://1281284684")
+		end
+	end
+end,"aimtarget",{"at"},"Allows you to pick between a part for aimlock to target/prediction")
+
+AddCommand(function(Arguments)
+	if Arguments[1] and tonumber(Arguments[1]) then 
+		AimbotVelocity = Arguments[1]
+		updateSettings()
+	end 
+end,"aimvelocity",{},"Changes your aimbot prediction velocity default: 5")
+
+AddCommand(function(Arguments)
+	if Arguments[1] then 
+		if Arguments[1] == "all" then 
+			local Players_ = Players:GetPlayers() 
+			for i = 1,#Players_ do 
+				if Players_[i] ~= LP and not table.find(EspTable,Players_[i].UserId) then
+					table.insert(EspTable,Players_[i].UserId)
+					if not UseDraw or Arguments[2] and Arguments[2]:lower() == "legacy" then 
+						espPlayer(Players_[i],"Legacy")
+					else 
+						espPlayer(Players_[i])
+					end
+				end
+			end
+		else 
+			local Player = PlrFinder(Arguments[1])
+			if not Player then return end 
+			if Player ~= LP and not table.find(EspTable,Player.UserId) then
+				table.insert(EspTable,Player.UserId)
+				if not UseDraw or Arguments[2] and Arguments[2]:lower() == "legacy" then 
+					espPlayer(Player,"Legacy")
+				else
+					espPlayer(Player)
+				end
+			end
+		end
+	end
+end,"esp",{},"allows you to see the player through walls (Esp [plr] legacy for the old esp (will default if you do NOT have drawing api)")
+
+    AddCommand(function(Arguments)
+        if Arguments[1] then 
+        local Player = PlrFinder(Arguments[1])
+        if not Player then return end
+        local A = workspace:GetDescendants()
+        table.remove(EspTable,Player.UserId)
+            for i = 1,#A do
+                if string.sub(A[i].Name, 1, 5) == "[ESP]" and string.sub(A[i].Name, 6) == Player.Name then
+                    A[i]:Destroy()
+                end
+            end
+            Unesp(Player)
+        else
+            local A = workspace:GetDescendants()
+            EspTable = {}
+            for i = 1,#A do
+                if string.sub(A[i].Name, 1, 5) == "[ESP]" then
+                    A[i]:Destroy()
+                end
+            end
+            local P = Players:GetPlayers()
+            for i = 1,#P do 
+                Unesp(P[i])
+            end 
+        end
+    end,"unesp",{},"Removes the esp on the player")
+
+    AddCommand(function(Arguments)
+        CamLocking = not CamLocking
+        if Arguments[1] then
+            local Player = PlrFinder(Arguments[1])
+            if Player then 
+                CamlockPlayer = Player
+            end
+        end 
+    end,"camlock",{"lockcam","cl"},"Different type of aimbot (Uses camera instead of the remote)")
+
+    local function Temp()
+        local Table = {} 
+            for i,v in pairs(CmdFrame:GetChildren()) do
+                table.insert(Table,v.Text)
+            end
+            return Table 
+        end 
+        
+        local WhitelistedOs = {
+            ['durango'] = "Xbox";
+            ['win32'] = "Windows";
+            ['ios'] = "Apple";
+            ['android'] = "Superior Android";
+            ['osx'] = "Mac (GROSS)";
+            ['windows_universal'] = "Windows 10 roblox"
+        }
+        UserInput.WindowFocusReleased:Connect(function()
+            RobloxInForeground = false 
+            UserInput.WindowFocused:Wait()
+            RobloxInForeground = true 
+        end)
+
+        local Debounce = false -- this code gets uglier every day holy fuck I'm gonna have to re-write it again soon lmao
+local function Stepped()
+	if GodMode or FeLoop then 
+		if LP.Character:FindFirstChild'Right Leg' then 
+			LP.Character['Right Leg']:Destroy()
+		end
+	end
+local PartFound = LP.Character:FindFirstChild'HumanoidRootPart' or LP.Character:FindFirstChild'Torso'
+	if Noclipping then 
+		local CDescendant = LP.Character:GetDescendants() 
+		for i = 1,#CDescendant do 
+			if CDescendant[i]:IsA'Part' then 
+				CDescendant[i].CanCollide = false
+			end
+		end
+	end
+	if flying and LP.Character:FindFirstChild'Humanoid' and not Debounce then
+		Debounce = true
+		LP.Character.Humanoid:ChangeState(3)
+		wait(0.2)
+		Debounce = false
+	end 
+
+    if AirWalkOn and LP.Character:FindFirstChild'Humanoid' and PartFound then 
+		LP.Character.Humanoid.HipHeight = 0
+		AirWalk.CFrame = PartFound.CFrame * CFrame.new(0,-3.5,0)
+	end
+	if CamLocking and CamlockPlayer and CamlockPlayer.Character and CamlockPlayer.Character:FindFirstChild'Torso' then 
+		workspace.CurrentCamera.CoordinateFrame = CFrame.new(workspace.CurrentCamera.CoordinateFrame.p,CamlockPlayer.Character.Head.CFrame.p)
+	end
+    for i = 1,#PlayerTable do
+		local Player,TopLeft,TopRight,BottomLeft,BottomRight = PlayerTable[i][1],PlayerTable[i][2],PlayerTable[i][3],PlayerTable[i][4],PlayerTable[i][5]
+		local Text,Tracer,IsUser = PlayerTable[i][6],PlayerTable[i][7],PlayerTable[i][8]
+		 if Player and Player.Character and Player.Character:FindFirstChild'Head' and LP.Character and LP.Character:FindFirstChild'Head' then 
+			 local Part = Player.Character:FindFirstChild'HumanoidRootPart' or Player.Character:FindFirstChild'Torso'
+			 if Part then
+				 local Cframe = Part.CFrame
+				 local h = Player.Character.Head.Size.Y / 2
+				 local Size = Vector3.new(2,3,0) * (h * 2)
+				 local RelativeHeadPos,TextOnScreen = workspace.CurrentCamera:WorldToViewportPoint(Player.Character.Head.Position)
+				 local TopLeftPos = workspace.CurrentCamera:WorldToViewportPoint((Cframe * CFrame.new(Size.X,Size.Y,0)).p)
+				 local TopRightPos = workspace.CurrentCamera:WorldToViewportPoint((Cframe * CFrame.new(-Size.X,Size.Y,0)).p)
+				 local BottomLeftPos = workspace.CurrentCamera:WorldToViewportPoint((Cframe * CFrame.new(Size.X,-Size.Y,0)).p)
+				 local BottomRightPos = workspace.CurrentCamera:WorldToViewportPoint((Cframe * CFrame.new(-Size.X,-Size.Y,0)).p)
+				 if RobloxInForeground then 
+					 TopLeft.Visible = TextOnScreen
+					 TopRight.Visible = TextOnScreen
+					 BottomLeft.Visible = TextOnScreen
+					 BottomRight.Visible = TextOnScreen
+					 if DrawTable['Visible'] then 
+						 Tracer.Visible = TextOnScreen
+					 else 
+						Tracer.Visible = false
+					 end 
+					 Text.Visible = TextOnScreen
+				 else 
+					 TopLeft.Visible = false
+					 TopRight.Visible = false
+					 BottomLeft.Visible = false
+					 BottomRight.Visible = false
+					 Tracer.Visible = false
+					 Text.Visible = false
+				 end 
+				 if TextOnScreen and RobloxInForeground then
+					 Text.Position = Vector2.new(RelativeHeadPos.X,RelativeHeadPos.Y) + Vector2.new(0,-30)
+					 Text.Center = true
+					 Text.Color = EspColour
+					 Text.Text = Player.Name.." | Health: "..checkHp(Player.Character).." | Cy Admin User: "..IsUser.."\nHas: Glock "..hasItem(Player,"Glock").." | Shotty "..hasItem(Player,"Shotty").." | Vest "..hasItem(Player,"BulletResist")
+					 TopLeft.From = Vector2.new(TopLeftPos.X,TopLeftPos.Y)
+					 TopLeft.To = Vector2.new(TopRightPos.X,TopRightPos.Y)
+					 TopRight.From = Vector2.new(TopRightPos.X,TopRightPos.Y)
+					 TopRight.To = Vector2.new(BottomRightPos.X,BottomRightPos.Y)
+					 BottomLeft.From = Vector2.new(BottomLeftPos.X,BottomLeftPos.Y)
+					 BottomLeft.To = Vector2.new(TopLeftPos.X,TopLeftPos.Y)
+					 BottomRight.From = Vector2.new(BottomRightPos.X,BottomRightPos.Y)
+					 BottomRight.To = Vector2.new(RelativeHeadPos.X,RelativeHeadPos.Y)
+					 if tostring(Player) == tostring(AimlockTarget) or tostring(Player) == tostring(CamlockPlayer) then 
+						Tracer.Color = Color3.fromRGB(144,0,0)
+					 else 
+						Tracer.Color = DrawTable['LineColour']
+					 end
+					 Tracer.Thickness = DrawTable['Thickness']
+					 Tracer.Transparency = DrawTable['Transparency']
+					 Tracer.From = Vector2.new(workspace.CurrentCamera.ViewportSize.X / 2,workspace.CurrentCamera.ViewportSize.X / 2 + 400)
+					 Tracer.To = Vector2.new(RelativeHeadPos.X,RelativeHeadPos.Y)
+				 end
+			 end
+		 end
+	 end 
+end
+
+Cframe.BackgroundColor3 = Color3.new(0.666667,0,0)
+Cframe.BackgroundTransparency = 0.20000000298023
+Cframe.BorderSizePixel = 0
+Cframe.Position = UDim2.new(0, 0, 1, 0)
+Cframe.Size = UDim2.new(0, 270, 0, 35)
+
+CText.BackgroundColor3 = Color3.new(0,0.000738177,0.000738177)
+CText.BorderSizePixel = 0
+CText.Position = UDim2.new(0, 5, 0, 5)
+CText.Size = UDim2.new(0, 260, 0, 25)
+CText.Font = Enum.Font.SourceSansLight
+CText.Text = ""
+CText.TextColor3 = Color3.new(1, 1, 1)
+CText.TextScaled = true
+CText.TextSize = 14
+CText.TextWrapped = true
+
+CmdFrame.BackgroundColor3 = Color3.new(0, 0.000738177, 0.000738177)
+CmdFrame.BorderSizePixel = 0
+CmdFrame.Position = UDim2.new(0, 0, -4, 0)
+CmdFrame.Size = UDim2.new(1, 0, 4, 0)
+CmdFrame.Visible = false
+
+local function Create(Text)
+if not Text then return end
+	local CmdList = Instance.new("TextLabel",CmdFrame)
+	CmdList.BackgroundColor3 = Color3.new(0.666667, 0, 0)
+	CmdList.BackgroundTransparency = 0.20000000298023
+	CmdList.BorderSizePixel = 0
+	CmdList.Position = UDim2.new(-10, 0, 0, 0)
+	CmdList.Size = UDim2.new(1, 0, 0, 20)
+	CmdList.Font = Enum.Font.SourceSansLight
+	CmdList.Text = Text
+	CmdList.TextColor3 = Color3.new(0.952941, 0.952941, 0.952941)
+	CmdList.TextScaled = true
+	CmdList.TextWrapped = true
+end
+
+local function Changed()
+pcall(function() 
+	if CText.Text ~= "" then
+		CmdFrame.Visible = true
+		local PositionMatch = 0
+		for _,cmd in pairs(CmdFrame:GetChildren()) do
+				if string.find(string.lower(cmd.Text),string.lower(CText.Text)) then
+					cmd.Position = UDim2.new(0, 0, 0, 2 + (PositionMatch * 20))
+					PositionMatch = PositionMatch + 1
+					if cmd.Position == UDim2.new(0, 0, 0, 142) then
+						cmd.Position = UDim2.new(-10, 0, 0, 0)
+						PositionMatch = PositionMatch - 1
+					end
+				else
+					cmd.Position = UDim2.new(-10, 0, 0, 0)
+				end
+			end
+		else
+			CmdFrame.Visible = false
+		end
+	end)
+end
+
+MainFrame.BackgroundColor3 = Color3.fromRGB(0,0,0)
+MainFrame.BackgroundTransparency = 0.250
+MainFrame.BorderColor3 = Color3.fromRGB(53,2,2)
+MainFrame.BorderSizePixel = 8
+MainFrame.Position = UDim2.new(0,695,0,297)
+MainFrame.Size = UDim2.new(0,495,0,431)
+MainFrame.AnchorPoint = Vector2.new(0,0)
+MainFrame.Visible = false 
+MainFrame.Active = true 
+MainFrame.Draggable = true 
+
+ScrollingFrame.BackgroundColor3 = Color3.fromRGB(53,2,2)
+ScrollingFrame.BackgroundTransparency = 0.400
+ScrollingFrame.BorderColor3 = Color3.fromRGB(0,0,0)
+ScrollingFrame.BorderSizePixel = 5
+ScrollingFrame.Position = UDim2.new(0.0880542845,0,0.126374945,0)
+ScrollingFrame.Size = UDim2.new(0,411,0,348)
+
+SearchBar.BackgroundColor3 = Color3.fromRGB(53,2,2)
+SearchBar.BackgroundTransparency = 0.400
+SearchBar.BorderColor3 = Color3.fromRGB(0,0,0)
+SearchBar.BorderSizePixel = 5
+SearchBar.Position = UDim2.new(0.0880542994,0,0.0598471165,0)
+SearchBar.Size = UDim2.new(0,411,0,28)
+SearchBar.Font = Enum.Font.SourceSansBold
+SearchBar.PlaceholderColor3 = Color3.fromRGB(255,255,255)
+SearchBar.Text = "Search"
+SearchBar.TextColor3 = Color3.fromRGB(135, 135, 135)
+SearchBar.TextSize = 24.000
+
+Credits.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Credits.BackgroundTransparency = 0.250
+Credits.BorderColor3 = Color3.fromRGB(53, 2, 2)
+Credits.BorderSizePixel = 5
+Credits.Position = UDim2.new(-0.00101006031,0,0.948468387,0)
+Credits.Size = UDim2.new(0,187,0,22)
+Credits.Font = Enum.Font.SourceSansBold
+Credits.Text = "UI Design by !fishgang Karma#9669"
+Credits.TextColor3 = Color3.fromRGB(255,255,255)
+Credits.TextSize = 14.000
+
+DmgIndicator.BackgroundColor3 = Color3.fromRGB(0,0,0)
+DmgIndicator.BackgroundTransparency = 0.700
+DmgIndicator.BorderSizePixel = 3
+DmgIndicator.Position = UDim2.new(0,0,1.00488257,0)
+DmgIndicator.Size = UDim2.new(0,385,0,50)
+DmgIndicator.Font = Enum.Font.SourceSans
+DmgIndicator.Text = ''
+DmgIndicator.TextColor3 = Color3.fromRGB(184,0,3)
+DmgIndicator.TextScaled = true
+DmgIndicator.TextSize = 30.000
+DmgIndicator.TextWrapped = true
+DmgIndicator.Visible = false 
+
+local function CreateCommand(Pos,Text)
+	local ActualCommands = Instance.new('TextLabel',ScrollingFrame)
+	ActualCommands.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
+	ActualCommands.BackgroundTransparency = 0.200
+	ActualCommands.BorderColor3 = Color3.fromRGB(53, 2, 2)
+	ActualCommands.Position = Pos
+	ActualCommands.Size = UDim2.new(0, 382, 0, 20)
+	ActualCommands.Font = Enum.Font.SourceSansBold
+	ActualCommands.Text = Text
+	ActualCommands.TextColor3 = Color3.fromRGB(255, 255, 255)
+	ActualCommands.TextSize = 14.000
+	ActualCommands.TextScaled = true 
+	ActualCommands.TextWrapped = true
+end
+
+SearchBar.Changed:Connect(function()
+local Index = 0
+	if SearchBar.Text then
+		for _,v in pairs(ScrollingFrame:GetChildren()) do
+			if not string.find(v.Text:lower(),SearchBar.Text:lower()) then
+				v.Visible = false
+			else
+				v.Visible = true
+				Index = Index + 1
+				v.Position = UDim2.new(0.0150422715,0,0.0127776451,0 + (Index * 20))
+			end
+		end
+	end
+end)
+
+local Debounce = false 
+local function ColourChanger(T)
+	if T:IsA'Trail' and not CoolkidTable[tostring(LP.UserId)] then
+		T.Color = BulletColour
+	end
+	if T:IsA'ObjectValue' and T.Name == "creator" and not Debounce then
+		local Thing = T.Value
+		local Method,Tool = Char(Thing)
+		b(Thing.Name.." has "..Method.." from "..math.floor((GetChar().Head.Position - Thing.Head.Position).magnitude).." studs with a "..Tool.Name)
+		if Tool.Name == "Shotty" then 
+			Debounce = true 
+			wait(0.7)
+			Debounce = false 
+		end 
+	end
+end
+
+local function HealthChanged(Health)
+	if Health <= HealBotHealth and HealBot and not TpBypass then 
+		if GrabThing("Burger",GetChar().Head.CFrame) then
+			local Hamborger = LP.Backpack:FindFirstChild'Burger'
+			if Hamborger then 
+				Hamborger.Parent = GetChar()
+				Hamborger:Activate() -- CHEEMS
+				repeat RunService.Heartbeat:Wait() until Hamborger.Parent ~= LP.Character
+			end
+		end -- yeah I copy pasted it from my heal cmd DEAL WITH IT 
+		if GrabThing("Drink",GetChar().Head.CFrame) then
+			local Drink = LP.Backpack:FindFirstChild'Drink'
+			if Drink then 
+				Drink.Parent = GetChar()
+				Drink:Activate()
+			end 
+		end		
+	end
+end 
+
+LP.CharacterAdded:Connect(function()
+	GetChar():WaitForChild('Humanoid',10)
+	ChildAddedEvent = GetChar().ChildAdded:Connect(CChildAdded)
+	HumanoidStateChangedEvent = GetChar().Humanoid.StateChanged:Connect(HumanoidState)
+	HumanoidCAdded = GetChar().Humanoid.DescendantAdded:Connect(ColourChanger)
+	HumanoidHealthChanged = GetChar().Humanoid.HealthChanged:Connect(HealthChanged)
+	GetChar().Humanoid.WalkSpeed = SpawnWS or NormalWS
+    GetChar().Humanoid.JumpPower = SpawnJP or NormalJP
+	GetChar().Humanoid.HipHeight = SpawnHH or NormalHH
+	if FeLoop then 
+		local Humanoid = GetChar().Humanoid:Clone()
+		GetChar().Humanoid:Destroy()
+		Humanoid.Parent = GetChar()
+		workspace.CurrentCamera.CameraSubject = GetChar()
+	end 
+
+    LP.CharacterRemoving:Connect(function()
+        ChildAddedEvent:Disconnect()
+        HumanoidStateChangedEvent:Disconnect()
+        HumanoidCAdded:Disconnect()
+        HumanoidHealthChanged:Disconnect()
+        HR = nil
+        flying = false
+    end)
+    
+    UserInput.InputBegan:Connect(function(Key)
+    if UserInput:GetFocusedTextBox() then return end
+    local PartFound = GetChar():FindFirstChild'HumanoidRootPart' or GetChar():FindFirstChild'Torso'
+        if Key.KeyCode == Enum.KeyCode.LeftControl then
+            if AirWalkOn then 
+                AirWalk.Size = Vector3.new(0,-1,0)
+            end
+            if Normalwalk and ControlSpeed == 8 then return end
+            GetChar().Humanoid.WalkSpeed = ControlSpeed
+        end
+        if Key.KeyCode == Enum.KeyCode.LeftShift then
+            KeyTable['Shift'] = true 
+            if Normalwalk and ShiftSpeed == 25 then return end 
+            GetChar().Humanoid.WalkSpeed = ShiftSpeed
+        end
+        if Key.KeyCode == Enum.KeyCode.W then 
+            KeyTable['w'] = true 
+        end
+        if Key.KeyCode == Enum.KeyCode.A then 
+            KeyTable['a'] = true 
+        end
+        if Key.KeyCode == Enum.KeyCode.S then 
+            KeyTable['s'] = true 
+        end
+        if Key.KeyCode == Enum.KeyCode.D then 
+            KeyTable['d'] = true 
+        end
+        if Key.KeyCode == Enum.KeyCode.E and GetChar():FindFirstChildOfClass'Tool' and not GetChar():FindFirstChild'KO' then 
+            LP.Backpack.ServerTraits.Finish:FireServer(LP.Backpack.Punch)
+        end 
+        if Key.KeyCode == Enum.KeyCode.Space and AirWalkOn then 
+            PartFound.CFrame = PartFound.CFrame + Vector3.new(0,5,0)
+        end
+        if Key.KeyCode == Enum.KeyCode.Quote then 
+            CText:CaptureFocus()
+            Cframe:TweenPosition(UDim2.new(0.015,0,0.95,0),"Out","Elastic",0.5,true)
+            wait()
+            CText.Text = ""
+            UserInput.TextBoxFocusReleased:Wait()
+            local Command = CText.Text
+            CText.Text = ""
+            CheckCommand(Command)
+            Cframe:TweenPosition(UDim2.new(0.015,0,1,0),"Out","Quad",0.5,true)
+        end
+        if ClickTpKey and ClickTpKey ~= "" and Key.KeyCode == Enum.KeyCode[ClickTpKey:upper()] and Mouse.Target then
+            if (Mouse.Hit.Position - PartFound.Position).magnitude < 50 then 
+                PartFound.CFrame = CFrame.new(Mouse.Hit.p + Vector3.new(0,5,0))
+            else
+                Teleport(CFrame.new(Mouse.Hit.p + Vector3.new(0,5,0)))
+            end
+        end
+        if Keys then 
+            for _,v in pairs(Keys) do 
+                if v and Enum.KeyCode[v:match'[%a%d]+$':upper()] == Key.KeyCode then 
+                    CheckCommand(v:match'^[%w%s]+')
+                end
+            end
+        end
+    end)
+    
+    UserInput.InputEnded:Connect(function(Key)
+    if UserInput:GetFocusedTextBox() then return end
+        if Key.KeyCode == Enum.KeyCode.LeftControl then
+            if AirWalkOn then
+                AirWalk.Size = Vector3.new(5,1,5)
+            end 
+            if Normalwalk and ControlSpeed == 8 then return end
+            GetChar().Humanoid.WalkSpeed = WalkSpeed
+        end
+        if Key.KeyCode == Enum.KeyCode.W then 
+            KeyTable['w'] = false
+        end
+        if Key.KeyCode == Enum.KeyCode.A then 
+            KeyTable['a'] = false 
+        end
+        if Key.KeyCode == Enum.KeyCode.S then 
+            KeyTable['s'] = false 
+        end
+        if Key.KeyCode == Enum.KeyCode.D then 
+            KeyTable['d'] = false 
+        end
+        if Key.KeyCode == Enum.KeyCode.LeftShift and ShiftSpeed then
+            KeyTable['Shift'] = false 
+            if Normalwalk and ShiftSpeed == 25 then return end 
+            GetChar().Humanoid.WalkSpeed = WalkSpeed
+        end 
+    end)
+    
+    Players.PlayerRemoving:Connect(function(P)
+        Unesp(P)
+    end)
+    
+    CText.FocusLost:Connect(function(Enter)
+        Cframe:TweenPosition(UDim2.new(0.015, 0, 1, 0),"Out","Quad",0.5,true)
+        if Enter then 
+            local Command = CText.Text
+            CText.Text = ""
+            CheckCommand(Command)
+        end
+    end)
+    ChildAddedEvent = GetChar().ChildAdded:Connect(CChildAdded)
+    HumanoidStateChangedEvent = GetChar().Humanoid.StateChanged:Connect(HumanoidState)
+    HumanoidCAdded = GetChar().Humanoid.DescendantAdded:Connect(ColourChanger)
+    HumanoidHealthChanged = GetChar().Humanoid.HealthChanged:Connect(HealthChanged)
+    Mouse.Button1Down:Connect(Button1Down)
+    Mouse.Button2Down:Connect(Button2Down)
+    LP.Chatted:Connect(CheckCommand)
+    UserInput.JumpRequest:Connect(DoubleJump)
+    CText:GetPropertyChangedSignal("Text"):Connect(Changed)
+    RunService.Stepped:Connect(Stepped)
+    
+    spawn(function()
+        while true do
+        local Char = GetChar()
+        if Char then 
+            local PartFound = Char:FindFirstChild'HumanoidRootPart' or Char:FindFirstChild'Torso'
+                if Char:FindFirstChildOfClass'Humanoid' and UseDraw then
+                    local Tool = Char:FindFirstChildOfClass'Tool'
+                    if Tool and Tool:FindFirstChild'Ammo' then 
+                        DrawingT.Text = "Current WalkSpeed: "..Char.Humanoid.WalkSpeed.."\nSprinting Speed: "..ShiftSpeed.."\nCrouching Speed: "..ControlSpeed.."\nJumpPower: "..Char.Humanoid.JumpPower.."\nFlying: "..tostring(flying).."\nNoclipping: "..tostring(Noclipping).."\nAimlock Target: "..tostring(AimlockTarget).."\n"..Tool.Name.." Clips & Ammo: "..Tool.Clips.Value..":"..Tool.Ammo.Value
+                    else 
+                        DrawingT.Text = "Current WalkSpeed: "..Char.Humanoid.WalkSpeed.."\nSprinting Speed: "..ShiftSpeed.."\nCrouching Speed: "..ControlSpeed.."\nJumpPower: "..Char.Humanoid.JumpPower.."\nFlying: "..tostring(flying).."\nNoclipping: "..tostring(Noclipping).."\nAimlock Target: "..tostring(AimlockTarget) 
+                    end
+                end
+                if PartFound and Blinking then 
+                    if BlinkMode == "None" or BlinkMode == "Shift" and KeyTable['Shift'] then
+                        if KeyTable['w'] then 
+                            PartFound.CFrame = PartFound.CFrame * CFrame.new(0,0,-BlinkSpeed)
+                        end 
+                        if KeyTable['a'] then 
+                            PartFound.CFrame = PartFound.CFrame * CFrame.new(-BlinkSpeed,0,0)
+                        end
+                        if KeyTable['s'] then 
+                            PartFound.CFrame = PartFound.CFrame * CFrame.new(0,0,BlinkSpeed)
+                        end
+                        if KeyTable['d'] then 
+                            PartFound.CFrame = PartFound.CFrame * CFrame.new(BlinkSpeed,0,0)
+                        end
+                    end 
+                end
+                wait()
+            end
+        end 
+    end)
+    
+    if PartTable then 
+        spawn(function()
+            while wait() do
+                if LP.Character:FindFirstChildOfClass'Humanoid' and LP.Character.Humanoid.HipHeight > 0 or AirWalkOn and LP.Character.Humanoid.FloorMaterial == Enum.Material.Neon and not LP.Character.Humanoid.Sit then 
+                    local JP = LP.Character.Humanoid.JumpPower
+                    LP.Character.Humanoid.JumpPower = 1.5
+                    LP.Character.Humanoid:ChangeState(3)
+                    wait(0.2)
+                    LP.Character.Humanoid.JumpPower = JP
+                end
+            end
+        end)
+    end
+    
+    spawn(function()
+        while wait(SpamDelay) do 
+            if Spamming and SpamMessage then 
+                ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(SpamMessage,"All")
+            end
+        end 
+    end)    
+    local FileDir,isFolder,makeFolder = syn_io_listdir or list_files,syn_io_isfolder or isfolder,syn_io_makefolder or makefolder
+
+if FileDir and isFolder and makeFolder then 
+	if not isFolder'ZetaMANEPlugins' then 
+		makeFolder('ZetaMANEPlugins')
+	end 
+	for _,v in pairs(FileDir'ZetaMANEPlugins') do 
+		local WorkingFile = loadfile(v)
+		if not WorkingFile then
+			ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("There was a syntax error (sadly can\'t output it as loadfile is gay)","All")
+		else 
+			local Work,Error = pcall(WorkingFile) 
+			if not Work then 
+				ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Runtime Error"..Error,"All")
+			end
+		end
+	end
+end 
+
+local BlacklistTable = {
+	[2] = true; -- :c
+
+}
+
+if BlacklistTable[LP.UserId] or LP:IsInGroup(5152759) or string.find(LP.Name:lower(),"lynx") then 
+	while true do end
+end 
+
+for i = 1,#Commands do
+local Alias = Commands[i].Alias
+	Create(Commands[i].Name)
+	for v = 1,#Alias do
+		Create(Alias[v])
+	end
+	CreateCommand(UDim2.new(0.0150422715,0,0.0127776451,0 + (i * 20)),Commands[i].Name.." "..Commands[i].Help)
+end
+print("Command Amount: "..#Commands)
+
+Notify("Zeta' Streets Admin has loaded!","It took "..(tick() - Tick).." seconds to load (Type Commands for help)\nDiscord cory 5366",10) 
+
+--omg yesss zeta is best script top 1 script omg yes yes yes yes yes yes yes yes!
+
+--wiffy--sniffy-i skiddie
