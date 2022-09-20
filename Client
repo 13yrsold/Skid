@@ -1,26 +1,198 @@
 local tick = tick()
 
+local KIC = game:GetService("Players").LocalPlayer
+local ScreenGui = Instance.new("ScreenGui")
+local Main = Instance.new("ImageLabel")--login Image
+local Frame = Instance.new("Frame")
+local PassImage = Instance.new("ImageLabel")
+local UserImage = Instance.new("ImageLabel")
+local Username = Instance.new("TextBox")
+local UsernameLabel = Instance.new("TextLabel")
+local KaliImage = Instance.new("ImageLabel")
+local KaliImageLabel = Instance.new('ImageLabel', Frame)
+local NorseIImage = Instance.new("ImageLabel")
+local NorseIImageLabel = Instance.new('ImageLabel', Frame)
+local PasswordLabel = Instance.new("TextLabel")
+local Password = Instance.new("TextBox")
+local Login = Instance.new("TextButton")
+
+ScreenGui.Parent = game.CoreGui
+
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.new(0, 0, 0)
+Frame.BorderColor3 = Color3.new(0, 0, 0)
+Frame.BorderSizePixel = 0
+Frame.Position = UDim2.new(0.450, 0, 0.350, 0)
+Frame.Size = UDim2.new(0, 200, 0, 300)
+Frame.BackgroundTransparency = 0
+Frame.ZIndex = 0
+
+Main.Name = "Main"  --login Image
+Main.Parent = ScreenGui
+Main.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Main.BackgroundTransparency = 1
+Main.Position = UDim2.new(0.465, 0, 0.573, 0)
+Main.Size = UDim2.new(0, 141, 0, 24)
+Main.Visible = true
+Main.Image = "rbxassetid://3570695787"
+Main.ImageColor3 = Color3.fromRGB(45, 45, 45)
+Main.ScaleType = Enum.ScaleType.Slice
+Main.SliceCenter = Rect.new(100, 100, 100, 100)
+Main.SliceScale = 0.120
+Main.ZIndex = 2
+
+PassImage.Name = "PassImage"
+PassImage.Parent = ScreenGui
+PassImage.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+PassImage.BackgroundTransparency = 1
+PassImage.Position = UDim2.new(0.465, 0, 0.490, 0)
+PassImage.Size = UDim2.new(0, 141, 0, 24)
+PassImage.Visible = true
+PassImage.Image = "rbxassetid://3570695787"
+PassImage.ImageColor3 = Color3.fromRGB(45, 45, 45)
+PassImage.ScaleType = Enum.ScaleType.Slice
+PassImage.SliceCenter = Rect.new(100, 100, 100, 100)
+PassImage.SliceScale = 0.120
+PassImage.ZIndex = 2
+
+UserImage.Name = "UserImage"
+UserImage.Parent = ScreenGui
+UserImage.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+UserImage.BackgroundTransparency = 1
+UserImage.Position = UDim2.new(0.465, 0, 0.410, 0)
+UserImage.Size = UDim2.new(0, 141, 0, 24)
+UserImage.Visible = true
+UserImage.Image = "rbxassetid://3570695787"
+UserImage.ImageColor3 = Color3.fromRGB(45, 45, 45)
+UserImage.ScaleType = Enum.ScaleType.Slice
+UserImage.SliceCenter = Rect.new(100, 100, 100, 100)
+UserImage.SliceScale = 0.120
+UserImage.ZIndex = 2
+
+Username.Name = "Username"
+Username.Parent = ScreenGui
+Username.BackgroundTransparency = 1
+Username.BackgroundColor3 = Color3.new(0, 0, 0)
+Username.BorderColor3 = Color3.new(0, 0, 0)
+Username.BorderSizePixel = 0
+Username.Position = UDim2.new(0.465, 0, 0.410, 0)
+Username.Size = UDim2.new(0, 141, 0, 24)
+Username.Font = Enum.Font.Ubuntu
+Username.Text = "" 
+Username.TextColor3 = Color3.new(200, 200, 200)
+Username.TextSize = 14
+Username.ZIndex = 3
+
+UsernameLabel.Name = "UsernameLabel"
+UsernameLabel.Parent = ScreenGui
+UsernameLabel.BackgroundTransparency = 1
+UsernameLabel.BackgroundColor3 = Color3.new(0, 0, 0)
+UsernameLabel.BorderColor3 = Color3.new(0, 0, 0)
+UsernameLabel.BorderSizePixel = 0
+UsernameLabel.Position = UDim2.new(0.443, 0, 0.390, 0)
+UsernameLabel.Size = UDim2.new(0, 141, 0, 24)
+UsernameLabel.Font = Enum.Font.Ubuntu
+UsernameLabel.Text = "Username" 
+UsernameLabel.TextColor3 = Color3.new(200, 200, 200)
+UsernameLabel.TextSize = 13
+UsernameLabel.ZIndex = 2
+
+
+KaliImage = "http://www.roblox.com/asset/?id=9290290399"
+
+KaliImageLabel.BackgroundColor3 = Color3.fromRGB(0,0,0)
+KaliImageLabel.Size = UDim2.new(0, 200, 0, 300)
+KaliImageLabel.Image = KaliImage
+
+PasswordLabel.Name = "PasswordLabel"
+PasswordLabel.Parent = ScreenGui
+PasswordLabel.BackgroundTransparency = 1
+PasswordLabel.BackgroundColor3 = Color3.new(0, 0, 0)
+PasswordLabel.BorderColor3 = Color3.new(0, 0, 0)
+PasswordLabel.BorderSizePixel = 0
+PasswordLabel.Position = UDim2.new(0.443, 0, 0.470, 0)
+PasswordLabel.Size = UDim2.new(0, 141, 0, 24)
+PasswordLabel.Font = Enum.Font.Ubuntu
+PasswordLabel.Text = "Password" 
+PasswordLabel.TextColor3 = Color3.new(200, 200, 200)
+PasswordLabel.TextSize = 13
+PasswordLabel.ZIndex = 2
+
+Password.Name = "Password"
+Password.Parent = ScreenGui
+Password.BackgroundColor3 = Color3.new(0, 0, 0)
+Password.BorderColor3 = Color3.new(0, 0, 0)
+Password.BorderSizePixel = 0
+Password.BackgroundTransparency = 1
+Password.Position = UDim2.new(0.465, 0, 0.490, 0)
+Password.Size = UDim2.new(0, 141, 0, 24)
+Password.Font = Enum.Font.Ubuntu
+Password.Text = "" 
+Password.TextColor3 = Color3.new(200, 200, 200)
+Password.TextSize = 13
+Password.ZIndex = 3
+
+Login.Name = "Login"
+Login.Parent = ScreenGui
+Login.BackgroundColor3 = Color3.new(0, 0, 0)
+Login.BorderColor3 = Color3.new(0, 0, 0)
+Login.BorderSizePixel = 0
+Login.BackgroundTransparency = 1
+Login.Position = UDim2.new(0.465, 0, 0.573, 0)
+Login.Size = UDim2.new(0, 141, 0, 24)
+Login.Font = Enum.Font.Ubuntu
+Login.Text = "Log in"
+Login.ZIndex = 3
+Login.TextColor3 = Color3.new(200, 200, 200)
+Login.TextSize = 13
+Login.MouseButton1Down:connect(function()
+if Username.Text == "Skid" then --//NORSE LOGIN LIVES ON
+if Password.Text == "User" then
+PasswordLabel.Visible = false 
+Password.Visible = false
+Login.Visible = false
+Main.Visible = false
+Frame.Visible = false
+PassImage.Visible = false
+UserImage.Visible = false
+Username.Visible = false
+UsernameLabel.Visible = false
+KaliImage.Visible = false
+KaliImageLabel.Visible = false
+NorseIImage.Visible = false
+NorseIImageLabel.Visible = false
+
+
+else
+KIC:Kick("Wrong")
+end
+else
+    KIC:Kick("Wrong")
+end
+end)
 
 getgenv().notify = function(title,message,length,icon)
 	StarterGui:SetCore("SendNotification",{['Title'] = title;['Text'] = message;['Duration'] = length;['Icon'] = icon;})
 end
-
+---------
 local LP = game:GetService("Players").LocalPlayer 
 local UserIDWhitelist = {
-    [748352] = true;
+    [748352] = true; --put ur user id in the box where 748352 is but delete 748352 so it would look like this []
 }
 
-if UserIDWhitelist[LP.UserId] then
+if UserIDWhitelist[LP.UserId] then --why did I add this lol
     end
 else
     notify("Whitelist fail","Just whitelist your user Id",5)
 end
 
+-----I am bored, so lets skid goodends scripts-----
+
 local player = game.Players.LocalPlayer
     local mouse = player:GetMouse()
      
     mouse.KeyDown:connect(function(k)
-	if k:lower() == "m" then
+	if k:lower() == "z" then
 		for i,v in pairs (game.Players.LocalPlayer.Character.Torso:GetChildren()) do
 			if v:IsA("Part") then
 				v:Destroy()
@@ -81,102 +253,116 @@ game:GetService("Players").LocalPlayer.Chatted:connect(function(msg)
     end)
 
     print([[
-
-    Skid Client v0.3
+  
+     Skid Client v0.4
     
-    Hotkey M = Removes Airwalk
-    Hotkey N = Airwalk
-    Hotkey R = Roll
-    Hotkey X = Noclip
+     ALL COMMANDS THAT RUN ON PLAYERS NAMES USE THEIR DISPLAY NAME (Example -camlock --display name--    -view --display name--)
+     If you want this Display name feature to skid, I don't mind. It's at line 500-507
 
+     Hotkey M = Removes Airwalk
+     Hotkey N = Airwalk
+     Hotkey R = Roll
+     Hotkey X = Noclip
+ 
     -knfiorb // skidded goodends knife orbit
     -nodoors // doors no longer appear
     -prison // go to prison
     -xray  // you can now see through walls
     -nxray // turns off xray
     -nkniforb // turns off kniforb
-    
+    -blink // speed hacks
+    -blinkspeed // value of the speed hacks
+    -nosit // removes thoses annoying seats while you're ground hvhing
+    -camlock // locks your camera on a target
+    -uncamlock // unlocks your camera
+    -view // looks in the view of your target
+    -unview // fixes your camera
+    -esp // traces where a player is
+    -unesp // untraces that player or players
     
     This isn't a real script. It's like Scartesu's skidware
     ]])
 
-    game:GetService("Players").LocalPlayer.Chatted:connect(function(msg)
- 
-        if (string.lower(msg) == "-nodoors") then
-            local doors = game.Workspace:GetChildren()
-            for i,v in pairs (doors)do
-                if v.Name = "Door" then
-                    v.Destroy()
-                end
-            end
-        end
-    end)
+game:GetService("Players").LocalPlayer.Chatted:connect(function(msg)
 
-    game:GetService("Players").LocalPlayer.Chatted:connect(function(msg)
- 
-        if (string.lower(msg) == "-prison") then
-            local Tp = game:GetService("TeleportService")
-            local placeID = 4669040
-
-Tp:Teleport(placeID,game.Player.LocalPlayer)
-        end
-    end)
-
-    game:GetService("Players").LocalPlayer.Chatted:connect(function(msg)
- 
-        if (string.lower(msg) == "-xray") then
-            local g = game.Workspace:GetChildren()
-for i,v in pairs (g)do
-    if v.IsA("Part") then
-        v.Transparency = 1
-    end
-end
+if (string.lower(msg) == "-nodoors") then
+	local doors = game.Workspace:GetChildren()
+for i,v in pairs (doors)do 
+	if v.Name == "Door" then
+		v:Destroy()
+		
+	 
+	end	
+	end
 end
 end)
 
 game:GetService("Players").LocalPlayer.Chatted:connect(function(msg)
 
-    if (string.lower(msg) == "-nxray") then
-        local g = game.Workspace:GetChildren()
-        for i,v in pairs (g)do
-            if v.IsA("Part") then 
+    if (string.lower(msg) == "-prison") then
+    local Tp = game:GetService("TeleportService")
+    local placeID = 4669040
+    
+    Tp:Teleport(placeID,game.Players.LocalPlayer)
+    end
+    end)
+
+    game:GetService("Players").LocalPlayer.Chatted:connect(function(msg)
+        if (string.lower(msg) == "-xray") then
+            local getc = game.Workspace:GetChildren()
+        for i,v in pairs (getc)do
+            if v:IsA("Part")  then
+                v.Transparency = 1
+            end
+        end
+        end
+        end)
+        
+        
+        game:GetService("Players").LocalPlayer.Chatted:connect(function(msg)
+        if (string.lower(msg) == "-nxray") then
+            local getc = game.Workspace:GetChildren()
+        for i,v in pairs (getc)do
+            if v:IsA("Part")  then
                 v.Transparency = 0
             end
         end
-    end 
-end)
-
-game:GetService("Players").LocalPlayer.Chatted:connect(function(msg)
-
-    if (string.lower(msg) == "-nkniforb" then
-        game.Players.LocalPlayer.Character.Knife:Destroy()
-    end
-end)
-
-local player = game.Players.LocalPlayer
-    local mouse = player:GetMouse()
-     
-    mouse.KeyDown:connect(function(key)
-        if key:lower() == "n"   then
-            local part = Instance.new("Part",game.Player.LocalPlayer.Character.Torso)
-            part.CFrame = game.Player.LocalPlayer.Character.Torso.CFrame * CFrame.new(0,-3,0)
-        part.size = Vector3.new(500,1,500)
-        part.Transparency = 1
-        part.Archored = true
         end
-    end)
+        end)
+
+        game:GetService("Players").LocalPlayer.Chatted:connect(function(msg)
+ 
+            if (string.lower(msg) == "-nkniforb") then
+                game.Players.LocalPlayer.Character.Knife:Destroy()
+            
+            end
+            end)
+
+            local player = game.Players.LocalPlayer
+            local mouse = player:GetMouse()
+             
+            mouse.KeyDown:connect(function(key)
+                if key:lower() == "n"   then
+             local part = Instance.new("Part",game.Players.LocalPlayer.Character.Torso)
+        part.CFrame = game.Players.LocalPlayer.Character.Torso.CFrame * CFrame.new(0,-3,0)
+        part.Size = Vector3.new(500,1,500)
+        part.Transparency = 1
+        part.Anchored = true
+        
+        end
+        end)
 
     local player = game.Players.LocalPlayer
 	local mouse = player:GetMouse()
 	 
 	mouse.KeyDown:connect(function(key)
 	    if key:lower() == "r"   then
-            local anim = Instance.new("Animation")
-            anim.AnimationId. = 'rbxassetid://3121033021'
-            local playanim = game.Player.LocalPlayer.Character.Humanoid:LoadAnimation(anim)
-            playanim:Play()
-        end
-    end)
+	        local anim = Instance.new("Animation")
+anim.AnimationId = 'rbxassetid://3121033021'
+local playanim = game.Players.LocalPlayer.Character.Humanoid:LoadAnimation(anim)
+playanim:Play()
+	    end
+	end)
 
 
 ------maxed out camera zoom---------
@@ -205,25 +391,7 @@ RunService.RenderStepped:Connect(function()
         end
     end
 end)
------------Noclip-------------
-local Players, RService = game:GetService("Players"), game:GetService("RunService");
-local LocalP, Mouse = Players.LocalPlayer, Players.LocalPlayer:GetMouse();
-local NoClip, NoClipKey = false, "x"
 
-RService.Stepped:Connect(function()
-    if NoClip == true and LocalP and LocalP.Character and LocalP.Character:FindFirstChild("Humanoid") then 
-        pcall(function()
-            LocalP.Character.Head.CanCollide = false 
-            LocalP.Character.Torso.CanCollide = false
-        end)
-    end
-end)
-
-Mouse.KeyDown:Connect(function(Key)
-    if Key == NoClipKey then 
-        NoClip = not NoClip
-    end
-end)
 --------Noslow---------
 if game.PlaceId == 4669040 then
     local mt = getrawmetatable(game)
@@ -264,7 +432,7 @@ local TextLabel = Instance.new("TextLabel")
 ScreenGui.Parent = game.CoreGui
 
 TextLabel.Parent = ScreenGui
-TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.BackgroundColor3 = Color3.fromRGB(26,143,202)
 TextLabel.BackgroundTransparency = 1.000
 TextLabel.Position = UDim2.new(0.00374999992, 0, 0.16312997, 0)
 TextLabel.Size = UDim2.new(0, 200, 0, 50)
@@ -314,9 +482,9 @@ if game.PlaceId == 455366377 then
             end
         end
 
-----gun anims
+----gun anims --only works in prison
 
-local lplr = game:GetService("Players").LocalPlayer
+--[[local lplr = game:GetService("Players").LocalPlayer
 local Glock = lplr.Backpack:FindFirstChild("Glock")
 local Animation = Instance.new("Animation")
 Animation.AnimationId = "rbxassetid://889968874"
@@ -343,7 +511,7 @@ shotty.Equipped:connect(function()
 end)
 shotty.Unequipped:connect(function()
     HUM:Stop()
-end)
+end)]]--
 
 -----chat spy
 
@@ -352,7 +520,7 @@ publicItalics = true
 enabled = true
 spyOnMyself = false    
 privateProperties = {
-	Color = Color3.fromRGB(128,0,128);
+	Color = Color3.fromRGB(26,143,202);
 	Font = Enum.Font.SourceSansBold;
 	TextSize = 21            
 }
@@ -408,6 +576,460 @@ local chatFrame = player.PlayerGui.Chat.Frame
 chatFrame.ChatChannelParentFrame.Visible = true
 chatFrame.ChatBarParentFrame.Position = chatFrame.ChatChannelParentFrame.Position+UDim2.new(UDim.new(),chatFrame.ChatChannelParentFrame.Size.Y)
 
-Notify("Skid Client", "Took "..string.sub(tostring(tick() - LoadingTime), 1, 7).." seconds to load", "", 3)
+local mouse = game.Players.LocalPlayer:GetMouse()
+ 
+mouse.KeyDown:Connect(function(v)
+    if v:lower() == "x" then
+local part = game.Workspace:FindFirstChild("Part")
+game.Players.LocalPlayer.Character.Head.Touched:Connect(function(part)
+part.CanCollide = false
+wait(3)
+part.CanCollide = true 
+end)
+end
+end)
 
+local c = Instance.new("Camera")
+local camera = workspace.CurrentCamera
+game.Players.LocalPlayer.Chatted:Connect(function(msg)
+    if string.find(msg,"-view") then  
+        local name = string.gsub(msg,"-view ", "")  
+        for i,v in pairs (game.Players:GetChildren()) do  
+            if string.sub(string.lower(v.Name) , 1, string.len(name)) == string.lower(name) then 
+camera.CameraSubject = v.Character
+end
+end
+end
+end)
+
+local c = Instance.new("Camera")
+local camera = workspace.CurrentCamera
+game.Players.LocalPlayer.Chatted:Connect(function(msg)
+    if string.find(msg,"-unview") then  
+        local name = string.gsub(msg,"-unview ", "")  
+        for i,v in pairs (game.Players:GetChildren()) do  
+            if string.sub(string.lower(v.Name) , 1, string.len(name)) == string.lower(name) then 
+camera.CameraSubject = game.Players.LocalPlayer.Character
+end
+end
+end
+end)
+
+notify("Skid Client", "Took "..string.sub(tostring(tick() - LoadingTime), 1, 7).." seconds to load", "", 3)
+
+local lighting = game.Lighting
+
+ 
+    local skybox = Instance.new("Sky",lighting)
+    skybox.SkyboxBk = "rbxassetid://442590085"
+    skybox.SkyboxDn = "rbxassetid://442589966"
+    skybox.SkyboxFt = "rbxassetid://442590192"
+    skybox.SkyboxLf = "rbxassetid://442590243"
+    skybox.SkyboxRt = "rbxassetid://442590140"
+    skybox.SkyboxUp = "rbxassetid://442590023"
+    
+    local lighting = game.Lighting
+  if lighting:FindFirstChild("ColorCorrection") then
+   lighting:FindFirstChild("ColorCorrection"):Remove()
+  end
+  if lighting:FindFirstChild("Correction") then
+   lighting:FindFirstChild("Correction"):Remove()
+  end 
+  if lighting:FindFirstChildOfClass("SunRaysEffect") then
+   lighting:FindFirstChildOfClass("SunRaysEffect"):Remove()
+   end
+local lighting = game.Lighting if lighting:FindFirstChildOfClass("SunRaysEffect") then lighting:FindFirstChildOfClass("SunRaysEffect"):Remove() end
+------------------Skid Client skids--------------
+getgenv().BlinkKey = "LeftShift"
+getgenv().Prefix = ""
+
+
+local Players, Uis, RService = game:GetService"Players", game:GetService"UserInputService", game:GetService"RunService";
+local Client, CF, Vec3 = Players.LocalPlayer, CFrame.new, Vector3.new;
+local Blink, BlinkSpeed, KeyHeld, tableConcatenate = false, 2, false, table.concat;
+local Noseats = false;
+local CamPart = nil;
+local ViewTarget = nil;
+local CamlockTarget = nil;
+local Viewing = false;
+local Camlock = false;
+
+
+local Players, RStorage, RService, TPService, TweenService, HttpService, SGui = game:GetService("Players"),game:GetService("ReplicatedStorage"),game:GetService("RunService"),game:GetService("TeleportService"), game:GetService("TweenService"), game:GetService("HttpService"), game:GetService("StarterGui")
+local Client, Mouse = Players.LocalPlayer, Players.LocalPlayer:GetMouse();local LocalP = function() return Client.Character or Client.CharacterAdded:Wait() end
+local Camera, CordCamera, CurCamera = workspace.CurrentCamera, workspace.CurrentCamera.CoordinateFrame, workspace.CurrentCamera;
+local CF, UD, UD2, INew, Vec3, NColor3 = CFrame.new, UDim.new, UDim2.new, Instance.new, Vector3.new, Color3.fromRGB;
+local ClickCheck, M1Held, Keyheld, BToggle, CanShoot, SelectingTarget, ColorGlock, ColorShotty = false, false, false, false, false, false, false, false
+local Blink, FirstFly, Flying, Animating, Visualizing, Teleporting, Equipped, debounce, JumpingStateDebounce, RunSpeeding, Spying, Spamming = false, false, false, false, false, false, false, false, false, false, false, false, false
+local Infjump, Noclip, ItemEsp, Airwalk, Aimbot, Aimlock, Camlock, GlockFollowing, ShottyFollow CashFarming, TPBypass, Feloop, Noslow, Attacked, Flinging, AntiFe, FeVan = false, false, false, false, false, false, nil, false, false, false, false, false, false, false, false, false, false
+local FSpeed, BSpeed, TPSpeed, XSet, YSet, ZSet, OSet, X,Y,Z, x,y,z, AV, SpamDelay = 7, 3, 2, 88,77,66,5, 0, 0, 0, 0, 0, 0, 10, 2;local Legitmode = false
+local FlyKey, NoClipKey, TrashTalkKey, ResetKey, AVUpKey, AVDownKey, BuyUziKey, BuyAmmoKey, BuyGlockKey, BuyFoodKey, LockOnKey, ShootLockedKey, AimPart, CamPart, BlinkKey, AimMode = "F","X","T","P","K","L","U","R","G","B","Q","E","Torso","Torso","LeftShift","New";
+local WSvalue, JPvalue, CSvalue = 16, 37.5, 8   --SKIDDED FROM MIKOWARE!! HEHWGWGWGWHGEWRHEHHER I LOVE SKIDDING
+
+
+getgenv().SearchPlayers = function(Name)
+    local Inserted = {}
+        for _, p in pairs(game:GetService("Players"):GetPlayers()) do 
+        if string.lower(string.sub(p.DisplayName, 1, string.len(Name))) == string.lower(Name) then 
+            table.insert(Inserted, p);return p
+        end
+    end
+end
+
+
+getgenv().GetInit = function(CName)
+    for _, v in next, Commands do 
+        if v.Name == CName or table.find(v.Aliases, CName) then 
+            return v.Function 
+        end 
+    end
+end
+
+getgenv().RunCommand = function(Cmd)
+    Cmd = string.lower(Cmd)
+    pcall(function()
+        if Cmd:sub(1, #Prefix) == Prefix then 
+            local Args = string.split(Cmd:sub(#Prefix + 1), " ")
+            local CmdName = GetInit(table.remove(Args, 1))
+            if CmdName and Args then
+                return CmdName(Args)
+            end
+        end
+    end)
+end
+
+
+local cmdbargui = Instance.new("ScreenGui")
+local Cmdbar = Instance.new("TextBox")
+local CmdbarARC = Instance.new("TextLabel")
+
+coroutine.resume(coroutine.create(function()
+cmdbargui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+cmdbargui.ResetOnSpawn = false
+cmdbargui.Name = "SyyCmdBar"
+
+Cmdbar.Name = "Cmdbar"
+Cmdbar.Parent = cmdbargui
+Cmdbar.BackgroundColor3 = Color3.fromRGB(8, 8, 8)
+Cmdbar.BorderColor3 = Color3.fromRGB(170, 0, 255)
+Cmdbar.BorderSizePixel = 3
+Cmdbar.Position = UDim2.new(0.001, 0, 0.59, 0)
+Cmdbar.Size = UDim2.new(0, 240, 0, 17)
+Cmdbar.Font = Enum.Font.SourceSansSemibold
+Cmdbar.Text = ""
+Cmdbar.TextColor3 = Color3.fromRGB(170, 0, 255)
+Cmdbar.TextSize = 20.000
+Cmdbar.Visible = false
+
+CmdbarARC.Name = "CmdbarARC"
+CmdbarARC.Parent = Cmdbar
+CmdbarARC.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
+CmdbarARC.Position = UDim2.new(0.0001, 0, 0, 0)
+CmdbarARC.BackgroundTransparency = 1
+CmdbarARC.BorderColor3 = Color3.fromRGB(255, 255, 255)
+CmdbarARC.BorderSizePixel = 0
+CmdbarARC.Size = UDim2.new(0, 15, 0, 15)
+CmdbarARC.Font = Enum.Font.Code
+CmdbarARC.Text = ">"
+CmdbarARC.TextColor3 = Color3.fromRGB(170, 0, 255)
+CmdbarARC.TextSize = 15.000
+CmdbarARC.TextWrapped = true
+end))
+
+local Uis = game:GetService("UserInputService")
+Uis.InputBegan:Connect(function(Key, Typing)
+    if Typing then return end
+    if Key.KeyCode == Enum.KeyCode.Quote then
+        Cmdbar.Visible = true
+        Cmdbar.Text = ""
+        wait()
+        Cmdbar:CaptureFocus()
+    end
+end)
+Cmdbar.FocusLost:Connect(function(Foc)
+    if Foc == true then
+        Cmdbar.Visible = false
+            RunCommand(Cmdbar.Text)
+    end
+end)
+Uis.InputEnded:Connect(function(Key)
+    if Key.KeyCode.Name == "LeftAlt" then
+        Cmdbar.Visible = false
+    end
+end)
+
+local Commands, ScriptLoaded, LoadingTime = {}, true, tick();
+getgenv().Loaded = true
+getgenv().GetInit = function(CName)
+    for _, v in next, Commands do 
+        if table.find(v.Aliases, CName) then 
+            return v.Function 
+        end 
+    end
+end
+
+getgenv().RunCommand = function(Cmd)
+    pcall(function()
+        if string.sub(string.lower(Cmd), 1, #Prefix) == Prefix then
+            local args = string.split(string.sub(string.lower(Cmd), #Prefix + 1), " ")
+            local CmdName = GetInit(table.remove(args, 1))
+            if CmdName and args then
+                return CmdName(args)
+            end
+        end
+    end)
+end
+
+Commands["Blink"] = {
+    ["Aliases"] = {"-blink", "-b"};
+    ["Description"] = "Turns Blinking Abilities off and on [Toggle]";
+    ["Function"] = function()
+        Blink = not Blink 
+        notify("Skid Client", "Blink -  "..tostring(Blink), "", 3)
+    end
+}
+Commands["BlinkSpeed"] = {
+    ["Aliases"] = {"-blinkspeed", "-bspeed", "-bs"};
+    ["Description"] = "Sets BlinkSpeed [Number]";
+    ["Function"] = function(args)
+        if tonumber(args[1]) then 
+            BlinkSpeed = tonumber(args[1])
+        else 
+            return notify("Skid Client", "Type a number goober!", "", 3)
+        end
+        notify("Skid Client", "BlinkSpeed -  "..tonumber(BlinkSpeed), "", 3)
+    end
+}
+
+local function InputBeganEvent(Key)
+    if not Uis:GetFocusedTextBox() then 
+        if Key.KeyCode == Enum.KeyCode[BlinkKey] then 
+            KeyHeld = true 
+            while KeyHeld == true and Blink == true and Client and Client.Character and Client.Character:FindFirstChild"Humanoid" and RService.Heartbeat:Wait() do 
+                local ClientPF, H = Client.Character:FindFirstChild"HumanoidRootPart" or Client.Character:FindFirstChild"Torso", Client.Character.Humanoid
+                ClientPF.CFrame = ClientPF.CFrame + Vec3(
+                    H.MoveDirection.X * BlinkSpeed, H.MoveDirection.Y * BlinkSpeed, H.MoveDirection.Z * BlinkSpeed
+                )
+            end
+        end
+    end
+end
+local function InputEndedEvent(Key)
+    if not Uis:GetFocusedTextBox() then 
+        if Key.KeyCode == Enum.KeyCode[BlinkKey] then 
+            KeyHeld = false 
+        end
+    end
+end
+local function PrintCommands()
+    local String, TotalCommands = "", 0;
+    for _, v in next, Commands do 
+        if v.Aliases and v.Description then 
+            TotalCommands = TotalCommands + 1;
+            String = ""..String.."["..tableConcatenate(v.Aliases, ", ").."] - "..v.Description.."\n";
+        end
+    end
+    
+end
+Uis.InputBegan:Connect(InputBeganEvent)
+Uis.InputEnded:Connect(InputEndedEvent)
+
+Client.Chatted:Connect(RunCommand)
+
+Commands["Removes Chairs"] = {
+    ["Aliases"] = {"-ns","-nosit"};
+    ["Function"] = function()
+        
+for i,v in next, workspace:GetDescendants() do
+    if v:IsA'Seat' then
+        v:Destroy()
+    end
+        end
+notify("Skid Client", "Seats are no longer useable")
+    end
+}
+
+Commands["Rejoin"] = {
+    ["Aliases"] = {"-rejoin", "-rj"};
+    ["Function"] = function()
+        TPService:Teleport(game.PlaceId, Client)
+    end
+}
+
+Commands["Sets Camlock Target"] = {
+    ["Aliases"] = {"-camlock","-cl","-c"};
+    ["Function"] = function(Args)
+        if Args[1] then 
+            CamlockTarget = SearchPlayers(Args[1]);Camlock = true
+        end
+        notify("Skid Client", "Camlock Target - "..tostring(CamlockTarget), "", 3)
+    end
+}
+Commands["UnCamlocks Camlocked Target"] = {
+    ["Aliases"] = {"-uncamlock", "-uncl","-unc"};
+    ["Function"] = function()
+        CamlockTarget = nil;Camlock = false 
+        notify("Skid Client", "Camlock - "..tostring(Camlock), "", 3)
+    end
+}
+
+RService.Stepped:Connect(function()
+    if Camlock == true and CamlockTarget and CamlockTarget.Character and CamlockTarget.Character:FindFirstChild(CamPart) then 
+        Camera.CoordinateFrame = CF(Camera.CoordinateFrame.p, CF(CamlockTarget.Character[CamPart].Position).p)
+    end
+     if Viewing == true and ViewTarget ~= nil then 
+        Camera.CameraSubject = ViewTarget.Character
+     end
+    if Noclip == true then 
+        for i = 1, #Client.Character:GetChildren() do
+            local CG = Client.Character:GetChildren()[i]
+            if CG:IsA("BasePart") then 
+                CG.CanCollide = false 
+            end
+        end
+    end
+end)
+
+getgenv().Items = function(Target, Item)
+    if Target.Backpack:FindFirstChild(Item) or Target.Character:FindFirstChild(Item) then
+        return "(Yes)"
+    else
+        return "(No)"
+    end
+end
+
+getgenv().Values = function(Target)
+    if not Target.Character:FindFirstChild("ForceField") then 
+        return "(No)"
+    elseif Target.Character:FindFirstChild("ForceField") then 
+        return "(Yes)"
+    end
+end
+
+getgenv().Clips = function(Target)
+    if not Target.Character:FindFirstChildWhichIsA("Tool") then 
+        return 
+    elseif Target.Character:FindFirstChildWhichIsA("Tool") then 
+        return Target.Character:FindFirstChildWhichIsA("Tool").Clips.Value
+    end
+end
+
+getgenv().Ammo = function(Target)
+    if not Target.Character:FindFirstChildWhichIsA("Tool") then 
+        return 
+    elseif Target.Character:FindFirstChildWhichIsA("Tool") then 
+        return Target.Character:FindFirstChildWhichIsA("Tool").Ammo.Value
+    end
+end
+
+
+getgenv().EspPlayer = function(Dude)
+    local bgui = Instance.new("BillboardGui", Dude.Character.Head)
+    local tlabel = Instance.new("TextLabel", bgui)
+
+    bgui.Name = "ESP"
+    bgui.Adornee = part
+    bgui.AlwaysOnTop = true
+    bgui.ExtentsOffset = Vector3.new(0, 3, 0)
+    bgui.Size = UDim2.new(0, 5, 0, 5)
+
+    tlabel.Name = "espTarget"
+    tlabel.BackgroundColor3 = Color3.new(255, 0, 255)
+    tlabel.BackgroundTransparency = 1
+    tlabel.BorderSizePixel = 0
+    tlabel.Position = UDim2.new(0, 0, 0, -30)
+    tlabel.Size = UDim2.new(1, 0, 7, 0)
+    tlabel.Visible = true
+    tlabel.ZIndex = 10
+    tlabel.Font = "ArialBold"
+    tlabel.FontSize = "Size18"
+    RService.RenderStepped:Connect(function()
+        if Dude and Dude.Character and Dude.Character:FindFirstChildOfClass("Humanoid") then 
+            tlabel.Text = Dude.DisplayName.." | Health: (".. math.floor((Dude.Character.Humanoid.Health)).."/"..math.floor((Dude.Character.Humanoid.MaxHealth))..") | ForceFielded: "..Values(Dude, "ForceField").." | Glock: "..Items(Dude,"Glock").." | Shotty: "..Items(Dude, "Shotty").." | Vest: "..Items(Dude, "BulletResist")
+        end
+    end)
+    local h = Instance.new("Highlight", Dude.Character)
+    h.FillTransparency = 1 
+    h.OutlineColor = Color3.fromRGB(255,140,0)
+    h.OutlineTransparency = 0 
+    h.Name = "SkidClientESP"
+    tlabel.TextColor = BrickColor.new("White") 
+    tlabel.TextStrokeTransparency = 0.5
+
+    Dude.CharacterAdded:Connect(function()
+        wait(0.2)
+        local bgui = Instance.new("BillboardGui", Dude.Character.Head)
+        local tlabel = Instance.new("TextLabel", bgui)
+
+        bgui.Name = "ESP"
+        bgui.Adornee = part
+        bgui.AlwaysOnTop = true
+        bgui.ExtentsOffset = Vector3.new(0, 3, 0)
+        bgui.Size = UDim2.new(0, 5, 0, 5)
+
+        tlabel.Name = "espTarget"
+        tlabel.BackgroundColor3 = Color3.new(255, 255, 255)
+        tlabel.BackgroundTransparency = 1
+        tlabel.BorderSizePixel = 0
+        tlabel.Position = UDim2.new(0, 0, 0, -30)
+        tlabel.Size = UDim2.new(1, 0, 7, 0)
+        tlabel.Visible = true
+        tlabel.ZIndex = 10
+        tlabel.Font = "ArialBold"
+        tlabel.FontSize = "Size18"
+        RService.RenderStepped:Connect(function()
+            if Dude and Dude.Character and Dude.Character:FindFirstChildOfClass("Humanoid") then 
+                tlabel.Text = Dude.Name.."  | Health: (".. math.floor((Dude.Character.Humanoid.Health))..")".." | ForceFielded: "..Values(Dude, "ForceField").." | Glock: "..Items(Dude,"Glock").." | Shotty: "..Items(Dude, "Shotty").." | Vest: "..Items(Dude, "BulletResist")
+            end
+        end)
+        local h = Instance.new("Highlight", Dude.Character)
+        h.FillTransparency = 1 
+        h.OutlineColor = Color3.fromRGB(255,140,0)
+        h.OutlineTransparency = 0 
+        h.Name = "SkidClientESP"
+        tlabel.TextColor = BrickColor.new("White") 
+        tlabel.TextStrokeTransparency = 0.5
+    end)
+end
+
+local plr = game.Players.LocalPlayer
+repeat wait() until plr.Character
+local char = plr.Character
+
+Commands["Esp a Player"] = {
+    ["Aliases"] = {"-esp", ""};
+    ["Function"] = function(Args)
+        if Args[1] then
+            EspTarget = SearchPlayers(Args[1])
+            if EspTarget then
+                EspPlayer(EspTarget)
+            end
+        end
+        notify("Skid Client", "Esp Target: "..tostring(EspTarget), "", 3)
+    end
+}
+Commands["UnEsp Esp'd Player"] = {
+    ["Aliases"] = {"-unesp", ""};
+    ["Function"] = function(Args)
+        if Args[1] then 
+			local UnEspPlayer;UnEspPlayer = SearchPlayers(Args[1])
+			if UnEspPlayer then 
+				for _, v in next, UnEspPlayer.Character:GetDescendants() do 
+					if v:IsA("BillboardGui") or v:IsA("TextLabel") or v:IsA("Highlight") then 
+						v:Destroy() 
+					end
+				end
+			end
+		end
+	end
+}
+
+--DETOSWARE BELOW
+--[[
+print("coming one day if i can be bothered also oldgen is discontinued fuck that script")
+warn("scar pls make detosware public")
+]]
+
+--leaking mikoware if scartesu says he hates me
+setclipboard("Anthrax is top 1 clan")
 --//I'm not at home nor on something I can use roblox with so i'm bored and making skid client not knowing if any of it works lol
