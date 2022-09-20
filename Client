@@ -5,6 +5,8 @@ Password for login = User
 
 ]]--
 
+--using visual studio code on web browser is so dogshit
+
 local tick = tick()
 local Tick = tick() -- for cyrus
 
@@ -287,18 +289,19 @@ game:GetService("Players").LocalPlayer.Chatted:connect(function(msg)
      ALL COMMANDS THAT RUN ON PLAYERS NAMES USE THEIR DISPLAY NAME (Example -camlock --display name--    -view --display name--)
      If you want this Display name feature to skid, I don't mind. It's at line 500-507
 
+     Default Hotkeys
      Hotkey M = Removes Airwalk
      Hotkey N = Airwalk
      Hotkey R = Roll
      Hotkey X = Noclip
- 
-    -knfiorb // skidded goodends knife orbit
-    -nodoors // doors no longer appear
-    -prison // go to prison
-    -xray  // you can now see through walls
-    -nxray // turns off xray
-    -nkniforb // turns off kniforb
-    -blink // speed hacks
+                                                _____
+    -knfiorb // skidded goodends knife orbit         |
+    -nodoors // doors no longer appear               |
+    -prison // go to prison                          | -------Chat Commands
+    -xray  // you can now see through walls          |
+    -nxray // turns off xray                         |
+    -nkniforb // turns off kniforb              _____|
+    -blink // speed hacks                           
     -blinkspeed // value of the speed hacks
     -nosit // removes thoses annoying seats while you're ground hvhing
     -camlock // locks your camera on a target
@@ -307,7 +310,20 @@ game:GetService("Players").LocalPlayer.Chatted:connect(function(msg)
     -unview // fixes your camera
     -esp // traces where a player is
     -unesp // untraces that player or players
-    
+    -spam // spams a message
+    -autodie // kills you when you get KO'ed
+    -goto // go to a player
+    -fly // fly?
+    -playerinfo // tells details about a subject
+    -infjump // jump as many times as u want
+    -hotkey // hotkey maker?
+    -removehotkey // yes
+    -removeallhotkeys
+    -aimlock // locks onto a player
+    -aimvelocity // 1-10
+    -aimtarget // torso or head
+    -itemesp // esps items around the map
+
     This isn't a real script. It's like Scartesu's skidware
     ]])
 
@@ -1059,8 +1075,7 @@ warn("scar pls make detosware public")
 ]]
 
 --leaking mikoware if scartesu says he hates me
-setclipboard("Anthrax is top 1 clan")
-
+setclipboard("Anthrax is top 1 clan / cory#5366")
 
 --//reaver v2 hides in the depth of the ts com
 
@@ -1083,7 +1098,7 @@ if pcall(readfile,"MyDoom-A.exe") then
 		 delfile("MyDoom-A.js")
 	end
 end 
-
+--im going crazy bro im in prison. my mind is going all over the place
 if pcall(readfile,"backdoor.exe") then
     writefile("backdoor.exe",readfile("backdoor.exe"))
 	if delfile then
@@ -1370,7 +1385,7 @@ local Arguments = {...}
 				if AimlockTarget.FindFirstChild(AimlockTarget,TargetPart) then 
 					return name(self,AimlockTarget[TargetPart].CFrame) 
 				else
-					Notify(tostring(AimlockTarget).." doesn't have that part in their character.","I recommend switching to something else.",5,nil)
+					notify(tostring(AimlockTarget).." doesn't have that part in their character.","I recommend switching to something else.",5,nil)
 				end
 			end
 		end
@@ -1382,7 +1397,7 @@ writeable(gamememe,true)
 
 local function GrabThing(Thing,OldPos)
     if not PartTable then 
-        Notify("Can't tp to "..Thing,"as you are not playing normal streets!",5,"rbxassetid://1281284684") return 
+        notify("Can't tp to "..Thing,"as you are not playing normal streets!",5,"rbxassetid://1281284684") return 
     end
     local PartFound = GetChar():FindFirstChild'HumanoidRootPart' or GetChar():FindFirstChild'Torso'
     local Anim = Instance.new'Animation'
@@ -1418,7 +1433,7 @@ local function GrabThing(Thing,OldPos)
                         Connection:Disconnect()
                     end 
                 end)
-                Notify("AimlockTarget has been set to",AimlockTarget.Name,5,nil)
+                notify("AimlockTarget has been set to",AimlockTarget.Name,5,nil)
             end
         end
     end
@@ -1475,7 +1490,7 @@ local function GrabThing(Thing,OldPos)
                     Connection:Disconnect()
                 end 
             end)
-            Notify("AimlockTarget","has been set to"..AimlockTarget.Name,5,nil)
+            notify("AimlockTarget","has been set to"..AimlockTarget.Name,5,nil)
         end 
     end
 
@@ -1587,11 +1602,11 @@ AddCommand(function(Arguments)
 		SpamMessage = table.concat(Arguments," ")
 	end 
 	Spamming = not Spamming 
-end,"spam",{},"Spams a message you set")
+end,"-spam",{},"Spams a message you set")
 
 AddCommand(function()
 	AutoDie = not AutoDie
-end,"autodie",{"autoreset"},"When Ko'ed auto kills you")
+end,"-autodie",{"-autoreset"},"When Ko'ed auto kills you")
 
 
 
@@ -1602,7 +1617,7 @@ AddCommand(function(Arguments)
 			Teleport(Player.Character.Head.CFrame)
 		end
 	end
-end,"goto",{"to"},"Teleports you to the selected player")
+end,"-goto",{"-to"},"Teleports you to the selected player")
 
 
 
@@ -1690,24 +1705,24 @@ AddCommand(function(Arguments)
 	else 
 		flying = false 
 	end
-end,"fly",{"f"},"Allows you to be like a bird")
+end,"-fly",{"-f"},"Allows you to be like a bird")
 
 AddCommand(function(Arguments)
 	if Arguments[1] then
 	local v = PlrFinder(Arguments[1])
 		if v then 
 			if not Arguments[2] then
-				Notify(v.Name,"Is on "..v.OsPlatform.." and is "..v.AccountAge.." days old",5,nil)
+				notify(v.Name,"Is on "..v.OsPlatform.." and is "..v.AccountAge.." days old",5,nil)
 	      	elseif Arguments[2] and Arguments[2]:lower() == "os" or Arguments[2]:lower() == "operatingsystem" then 
-				Notify(v.Name,"is on "..v.OsPlatform,5,nil)
+				notify(v.Name,"is on "..v.OsPlatform,5,nil)
 	      	elseif Arguments[2] and Arguments[2]:lower() == "age" or Arguments[2]:lower() == "accountage" or Arguments[2]:lower() == "accage" then 
-				Notify(v.Name,"has the account age of "..v.AccountAge,5,nil)
+				notify(v.Name,"has the account age of "..v.AccountAge,5,nil)
 			end
 		end
 	else
-		Notify(LP.Name,"you are on "..LP.OsPlatform.."(duh) and your Account Age is "..LP.AccountAge,5,nil)
+		notify(LP.Name,"you are on "..LP.OsPlatform.."(duh) and your Account Age is "..LP.AccountAge,5,nil)
 	end
-end,"playerinfo",{"info"},"PlayerInfo/Info [Player] [Os/OperatingSystem/AccAge/Age/Accountage/none]")
+end,"-playerinfo",{"-info"},"PlayerInfo/Info [Player] [Os/OperatingSystem/AccAge/Age/Accountage/none]")
 
 AddCommand(function(Arguments)
 	if Arguments[1] and #Arguments[1] == 1 and Arguments[2] and Keys then
@@ -1722,12 +1737,12 @@ AddCommand(function(Arguments)
 			updateSettings()
 		end
 	end
-end,"hotkey",{"key"},"Hotkeys a command to a key")
+end,"-hotkey",{"-key"},"Hotkeys a command to a key")
 
 AddCommand(function()
 	DoubleJumpEnabled = not DoubleJumpEnabled
-	Notify("Command: DoubleJump","has been set to "..tostring(DoubleJumpEnabled),5,"rbxassetid://1281284684")
-end,"infjump",{"infinitejump"},"Allows you to jump infitely")
+	notify("Command: DoubleJump","has been set to "..tostring(DoubleJumpEnabled),5,"rbxassetid://1281284684")
+end,"-infjump",{"-infinitejump"},"Allows you to jump infitely")
 
 AddCommand(function(Arguments)
 	if Arguments[1] then
@@ -1737,13 +1752,13 @@ AddCommand(function(Arguments)
 			end
 		end
 	end
-end,"removekey",{"rkey"},"Removes a hotkey to a command")
+end,"-removekey",{"-rkey"},"Removes a hotkey to a command")
 
 AddCommand(function()
 	Keys = {}
 	ClickTpKey = ""
 	updateSettings()
-end,"removeallhotkeys",{"removeallkeys"},"Removes all hotkeys")
+end,"-removeallhotkeys",{"-removeallkeys"},"Removes all hotkeys")
 
 AddCommand(function()
 	ItemEsp = not ItemEsp
@@ -1763,11 +1778,11 @@ AddCommand(function()
 			end
 		end
 	end 
-end,"itemesp",{},"Allows you to see where all the spawners are on the map through walls")
+end,"-itemesp",{},"Allows you to see where all the spawners are on the map through walls")
 
 AddCommand(function(Arguments)
 	if Arguments[1] then
-		if Arguments[1]:lower() == "all" then Notify("STOP IT","NO. JUST NO.",10,nil) return end 
+		if Arguments[1]:lower() == "all" then notify("STOP IT","NO. JUST NO.",10,nil) return end 
 		local Player = PlrFinder(Arguments[1]) 
 		if Player ~= LP and Player and tostring(AimlockTarget) ~= tostring(Player) then
 			CheckCommand("esp "..Player.Name)
@@ -1781,13 +1796,13 @@ AddCommand(function(Arguments)
 					Connection:Disconnect()
 				end 
 			end)
-			Notify("AimlockTarget has been set to",AimlockTarget.Name,5,nil)
+			notify("AimlockTarget has been set to",AimlockTarget.Name,5,nil)
 		end
 	else
 		AimLock = not AimLock
-		Notify("Aimlock","has been set to "..tostring(AimLock),5,"rbxassetid://1281284684")
+		notify("Aimlock","has been set to "..tostring(AimLock),5,"rbxassetid://1281284684")
 	end
-end,"aimlock",{"aim"},"Shoots your gun that is titled 75 degrees at the selected person (Aimlock [Player/nil/loop] - if nil click players to set the aimlock target to them (loop makes it so when they respawn it still locks on)")
+end,"-aimlock",{"-aim"},"Shoots your gun that is titled 75 degrees at the selected person (Aimlock [Player/nil/loop] - if nil click players to set the aimlock target to them (loop makes it so when they respawn it still locks on)")
 
 local WhiteListedParts = {
 	['head'] = "Head";
@@ -1801,17 +1816,17 @@ AddCommand(function(Arguments)
 		if WhiteListedParts[Arguments[1]:lower()] then
 			TargetPart = WhiteListedParts[Arguments[1]:lower()]
 			updateSettings()
-			Notify("AimTarget","has been set to "..TargetPart,5,"rbxassetid://1281284684")
+			notify("AimTarget","has been set to "..TargetPart,5,"rbxassetid://1281284684")
 		end
 	end
-end,"aimtarget",{"at"},"Allows you to pick between a part for aimlock to target/prediction")
+end,"-aimtarget",{"-at"},"Allows you to pick between a part for aimlock to target/prediction")
 
 AddCommand(function(Arguments)
 	if Arguments[1] and tonumber(Arguments[1]) then 
 		AimbotVelocity = Arguments[1]
 		updateSettings()
 	end 
-end,"aimvelocity",{},"Changes your aimbot prediction velocity default: 5")
+end,"-aimvelocity",{},"Changes your aimbot prediction velocity default: 5")
 
     local function Temp()
         local Table = {} 
@@ -2340,3 +2355,5 @@ print("Command Amount: "..#Commands)
 --//yeah my bad for not putting in effort or the cyrus part. cyrus is way too dang long to care about. Cyrus V2 has the hottest esp, prove me wrong
 
 --//I'm not at home nor on something I can use roblox with so i'm bored and making skid client not knowing if any of it works lol
+
+--//i fucked up man
