@@ -1,3 +1,10 @@
+--[[
+
+Username for login = Skid
+Password for login = User
+
+]]--
+
 local tick = tick()
 
 local KIC = game:GetService("Players").LocalPlayer
